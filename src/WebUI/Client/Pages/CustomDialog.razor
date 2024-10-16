@@ -1,0 +1,16 @@
+﻿<MudDialog @attributes="Attributes">
+    <DialogContent>
+        <div class="p-3">
+            <MudText Typo="Typo.h6" GutterBottom="true" Class="fw-bold">@Message</MudText>
+                <p class="mb-5">
+                    @Description
+            </p>
+            <div class="d-flex justify-content-center gap-2">
+                <MudButton @onclick="(() => Confirm(false))" Class="text-capitalize me-1 fs-6" StartIcon="@Icons.Material.Filled.Cancel"
+                           Size=Size.Medium Variant="Variant.Filled">Decline</MudButton>
+                <MudButton Class="text-capitalize fs-6" Color="@Color.Success" @onclick="(() => Confirm(true))" StartIcon="@Icons.Material.Filled.Check"
+                           Size=Size.Medium Variant="Variant.Filled">Accept</MudButton>
+            </div>
+        </div>
+    </DialogContent>
+</MudDialog>

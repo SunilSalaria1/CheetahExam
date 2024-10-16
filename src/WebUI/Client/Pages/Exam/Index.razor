@@ -1,0 +1,116 @@
+@page "/exams"
+@attribute [Authorize(Roles = Constant.UserRoles.Admin)]
+
+@using CheetahExam.WebUI.Shared.Constants
+@using Microsoft.AspNetCore.Authorization
+@using WebUI.Shared.Common.Models.Exams
+
+<div class="row">
+    <div class="col-sm-12">
+        <MudCard Elevation="0">
+            <MudItem Class="row">
+                <MudItem Class="col p-0">
+                    <MudText Typo="Typo.h5">Exams</MudText>
+                </MudItem>
+            </MudItem>
+            <MudItem Class="row mt-0 mb-3">
+                <MudItem Class="col p-0">
+                    <MudItem Class="row justify-content-lg-between gap-y-3">
+                        <MudItem Class="col-xl-4 col-md-4 p-0">
+                            <MudTextField @bind-Value="SearchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                        </MudItem>
+                        <MudItem Class="col-xl-7 col-md-8 d-sm-flex d-block justify-content-end align-items-center gap-3 p-0">
+                            <MudSelect Class="mb-3 mb-sm-0" T="string" ValueChanged="@((string x) => HandleCategoryValueChanged(x))" Value="@SelectedCategory" Margin="Margin.Dense" Label="Select Category" Variant="Variant.Outlined" Clearable>
+                                @foreach (var categoryItem in CategoryItems)
+                                {
+                                    <MudSelectItem Value="categoryItem.Key.ToString()">@categoryItem.Value</MudSelectItem>
+                                }
+                            </MudSelect>
+                            <MudSelect Class="mb-3 mb-sm-0" T="string" ValueChanged="@((string x) => HandleDisciplineValueChanged(x))" Value="@SelectedDiscipline" Margin="Margin.Dense" Label="Select Discipline" Variant="Variant.Outlined" Clearable>
+                                @foreach (var disciplineItem in DisciplineItems)
+                                {
+                                    <MudSelectItem Value="disciplineItem.Key.ToString()">@disciplineItem.Value</MudSelectItem>
+                                }
+                            </MudSelect>
+                            <MudButton OnClick="@(() => ImportExam())" Class="text-capitalize" StartIcon="@Icons.Material.Filled.ImportExport"
+                                                   Size=Size.Medium Variant="Variant.Filled" Color="Color.Primary">Import</MudButton>
+                            <MudButton OnClick="@(() => AddExam())" Class="text-capitalize" StartIcon="@Icons.Material.Filled.AddCircle"
+                                       Size=Size.Medium Variant="Variant.Filled" Color="Color.Primary">Create</MudButton>
+                        </MudItem>
+                    </MudItem>
+                </MudItem>
+            </MudItem>
+        </MudCard>
+    </div>
+    <div class="col-sm-12">
+        <MudCard Elevation="0">
+            <MudItem Class="row pb-2">
+                <MudItem Class="col-12 col-md-8 p-1">
+                    <MudItem Class="row">
+                        <MudItem Class="col-12 col-md-2 p-1 d-flex align-items-center">
+                            Filters
+                        </MudItem>
+                        <MudItem Class="col-12 col-md-5 p-1 d-flex align-items-center">
+                            <MudSwitch Value="ISActive" ValueChanged="@((bool x) => HandleActiveToggle(x))" Color="Color.Primary" Label="Active Exams" />
+                        </MudItem>
+                    </MudItem>
+                </MudItem>
+                <MudItem Class="col-12 col-md-4 p-1 d-flex justify-content-end align-items-center">
+                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.RadioButtonChecked" Color="Color.Success" Class="mx-2" /> Active Exams : <strong class="mx-2"> @ActiveExamsCount.ActiveExams/@ActiveExamsCount.TotalExams</strong>
+                </MudItem>
+            </MudItem>
+        </MudCard>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <MudDataGrid Dense="true" Hover="true" Class="p-2" Elevation="4" T="ExamDto" Items="@Exams" SortMode="SortMode.Multiple"
+                     Filterable="true" Bordered="true" Hideable="true" QuickFilter="@QuickFilter" Loading=@ISLoading>
+            <Columns>
+                <TemplateColumn Sortable="false" Filterable="false">
+                    <CellTemplate>
+                        <MudStack Row Class="d-flex justify-content-center">
+                             <MudAvatar @onclick="@(() => PopupImage(context.Item?.Media?.Url ?? DefaultImage))" Rounded=true>
+                                 <MudImage Src="@(context.Item?.Media?.Url ?? DefaultImage)" Width="50" Height="50" Alt="Exam Image" Elevation="25" Class="rounded-lg cursor-pointer" />
+                             </MudAvatar>
+                         </MudStack>
+                     </CellTemplate>
+                 </TemplateColumn>
+                 <PropertyColumn Property="x => x.Name" Title="Exam Title" Sortable="true" Filterable="false" />
+                 <PropertyColumn Property="x => x.ExamDate" Format="dd-MMM-yyyy" Title="Exam Date" Sortable="true" Filterable="false" />
+                 <PropertyColumn Property="x => x.ExamDuration" Title="Duration Minutes" Format="hh\:mm" Sortable="false" Filterable="false" />
+                 <PropertyColumn Property="x => x.Category_GeneralLookUp != null ? x.Category_GeneralLookUp.Value : string.Empty" Title="Category" Sortable="true" Filterable="false" />
+                 <PropertyColumn Property="x => x.Discipline_GeneralLookUp != null ? x.Discipline_GeneralLookUp.Value : string.Empty" Title="Discipline" Sortable="true" Filterable="false" />
+                 <PropertyColumn Property="x => x.ISActive" Title="IsActive" Sortable="false" Filterable="false" />
+                 <TemplateColumn Sortable="false" Filterable="false">
+                     <CellTemplate>
+                         <MudStack Row Spacing="3" Class="d-flex justify-content-center">
+                             <MudTooltip Text="View/Add Questions">
+                                 <MudIconButton OnClick="@(() => QuestionOptions(context.Item))" Icon="@Icons.Material.Filled.QuestionAnswer" Size="@Size.Small" Variant="@Variant.Filled" aria-label="view-add-questions" Color="@Color.Primary" />
+                             </MudTooltip>
+                             <MudTooltip Text="Download exam to excel">
+                                 <MudIconButton OnClick="@(() => ExportExam(context.Item))" Icon="@Icons.Material.Filled.FileDownload" Size="@Size.Small" Variant="@Variant.Filled" aria-label="Download-exam-to-excel" Color="@Color.Primary" />
+                             </MudTooltip>
+                             <MudTooltip Text="Edit">
+                                 <MudIconButton OnClick="@(() => EditExam(context.Item))" Icon="@Icons.Material.Filled.Edit" Size="@Size.Small" Variant="@Variant.Filled" aria-label="edit" Color="@Color.Primary" />
+                             </MudTooltip>
+                             <MudTooltip Text="@(context.Item.ISArchive?"Retrieve":"Delete")">
+                                 <MudIconButton OnClick="@(() => HandleExamDeleteAction(context.Item.UniqueId, context.Item.ISArchive ? "Retrieve" : "Delete"))"
+                                                Icon="@(context.Item.ISArchive ? (Icons.Material.Filled.Undo) : (Icons.Material.Filled.Delete))" Size="@Size.Small"
+                                                Variant="@Variant.Filled" aria-label="delete" Color="@(context.Item.ISArchive ? Color.Warning : Color.Error)" />
+                             </MudTooltip>
+                         </MudStack>
+                     </CellTemplate>
+                 </TemplateColumn>
+             </Columns>
+             <PagerContent>
+                 <MudDataGridPager T="ExamDto" />
+             </PagerContent>
+         </MudDataGrid>
+     </div>
+ </div>
+
+ @* here we are open selected image in pop up *@
+ <ImageDialog @bind-IsVisible="ISImageDialogVisible" ImageUrl="@DialogImageURL" DialogOptions="ImageDialogOptions" PopupClosed="ClosePopupImage" />

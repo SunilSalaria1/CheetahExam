@@ -1,0 +1,21 @@
+﻿@using CheetahExam.WebUI.Shared.Common.Models.Exams
+
+<MudItem Class="row">
+    <MudItem Class="col"><b>@Question.Name</b></MudItem>
+</MudItem>
+
+@foreach (var option in Question.Options)
+{
+    <MudItem Class="row">
+        <MudItem Class="col" style="display: flex; justify-content: start; align-items: center;">
+            <MudCheckBox Disabled="true" T="bool" @bind-Value="option.ISCorrect" Size="Size.Small">@((char)('A' + Question.Options.IndexOf(option))). @option.Name</MudCheckBox>
+        </MudItem>
+    </MudItem>
+}
+<MudItem Class="row">
+    <MudItem Class="col d-flex justify-content-end">
+        <MudItem Class="row">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" Disabled="true">Submit</MudButton>
+        </MudItem>
+    </MudItem>
+</MudItem>

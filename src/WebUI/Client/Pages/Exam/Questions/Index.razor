@@ -1,0 +1,842 @@
+@page "/exams/questions/{examId?}"
+@attribute [Authorize(Roles = Constant.UserRoles.Admin)]
+
+@using static CheetahExam.WebUI.Shared.Enums.Enum
+@using CheetahExam.WebUI.Shared.Common.Models.Exams
+@using CheetahExam.WebUI.Shared.Constants
+@using CheetahExam.WebUI.Shared.Utility
+@using Microsoft.AspNetCore.Authorization
+
+<MudGrid>
+	<MudItem xs="12">
+		<MudPaper Class="align-end justify-end mud-width-full py-2">
+		<MudItem Class="mx-2 d-flex flex-sm-row align-items-center flex-column gap-y-2">
+					<MudButton Variant="Variant.Filled" Color="Color.Primary" Class="me-sm-auto">
+						<MudIcon Icon="@Icons.Material.Filled.ArrowBack" Class="me-2 fs-5" />
+						<span class="text-capitalize">Back</span>
+					</MudButton>
+                <MudButton StartIcon="@Icons.Material.Filled.ImportExport" Variant="Variant.Filled" Color="Color.Primary" Class="text-capitalize ms-2" DisableElevation="true" Disabled=@(IsQuestionRearrangeSelected || IsOptionRearrangeSelected) OnClick="@(() => ImportQuestions())">Import Questions</MudButton>
+				<MudButton StartIcon="@Icons.Material.Filled.AddCircle" Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" Disabled=@(IsQuestionRearrangeSelected || IsOptionRearrangeSelected) OnClick="@(() => OpenDialog(maxWidth))" Class="ms-3 text-capitalize">Add Question</MudButton>
+			</MudItem>
+		</MudPaper>
+
+	</MudItem>
+
+	@* <------Left Panel----> *@
+
+	<MudItem xs="12" sm="4">
+		<MudPaper Class="question-type-list">
+			<MudText Typo="Typo.subtitle2" />@Exam.Name
+			<MudList Clickable="true">
+				<MudListItem Icon="@Icons.Material.Filled.QuestionAnswer" Text="Questions" InitiallyExpanded="false">
+
+					<NestedList>
+
+						@if (Questions.Any() && !IsQuestionRearrangeSelected)
+						{
+							@* <MudTooltip Text="Rearrange Question Display Order"> *@
+								<MudButton StartIcon="@Icons.Material.Filled.FormatListNumbered" Variant="Variant.Filled" Class="text-capitalize m-3" OnClick="RearrangeQuestionsOrder">Rearrange question order</MudButton>
+								@* <MudIconButton Icon=@Icons.Material.Filled.Reorder Class="ms-auto d-block" OnClick="RearrangeQuestionsOrder" /> *@
+							@* </MudTooltip> *@
+						}
+						@if (IsQuestionRearrangeSelected)
+						{
+							<div class="row mx-0">
+								<div class="col-12 py-4">
+									<MudButton StartIcon="@Icons.Material.Filled.Refresh" Variant="Variant.Filled" Class="text-capitalize" OnClick="RearrangeQuestionsOrder">reset question order</MudButton>
+									<MudButton StartIcon="@Icons.Material.Filled.Save" Variant="Variant.Filled" Color="Color.Primary" OnClick="UpdateQuestionDisplayOrder" Class="text-capitalize ms-2">Save</MudButton>
+								</div>
+							</div>
+						}
+						<div class="question-list">
+							@if (!IsQuestionTypeSelected && !Questions.Any())
+							{
+								<MudItem Class="d-flex justify-content-center py-4">
+									<MudButton StartIcon="@Icons.Material.Filled.AddCircle" Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" OnClick="@(() => OpenDialog(maxWidth))" Class="text-capitalize">Add Question</MudButton>
+								</MudItem>
+							}
+
+							@foreach (var question in Questions.Where(q => q.ParentQuestionId == null).OrderBy(question => question.DisplayOrder))
+							{
+								<MudList Clickable=@(!IsQuestionRearrangeSelected)>
+
+									@if (question.QuestionType_GeneralLookUpID == QuestionTypes.Comprehension)
+									{
+										<MudListItem>
+											<ChildContent>
+												<div class="d-flex">
+													@if (IsQuestionRearrangeSelected)
+													{
+														<input class="order-box form-control form-control-sm" type="text" @bind-value="@(question.DisplayOrder)" />
+													}
+													else
+													{
+														<span class="ms-2"> @(question.DisplayOrder).</span>
+													}
+
+													<span class="ms-2"> @(question.Name)</span>
+													<div class="ms-auto">
+														<MudIconButton Icon="@Icons.Material.Filled.OpenInFull" Size="Size.Small" OnClick="@(() => OpenQuestion(question.UniqueId))" />
+													</div>
+												</div>
+											</ChildContent>
+
+											<NestedList>
+
+												@foreach (var comprehensionQuestion in Questions.Where(q => q.ParentQuestionId == question.UniqueId).OrderBy(question => question.DisplayOrder))
+												{
+													<MudListItem OnClick="@(() => OpenQuestion(comprehensionQuestion.UniqueId))">
+														<div class="d-flex">
+
+															@if (IsQuestionRearrangeSelected)
+															{
+																<input class="order-box form-control form-control-sm" type="text" @bind-value="@(comprehensionQuestion.DisplayOrder)" />
+															}
+															else
+															{
+																<span class="ms-2"> @(comprehensionQuestion.DisplayOrder).</span>
+															}
+
+															<span class="ms-2"> @(comprehensionQuestion.Name)</span>
+														</div>
+													</MudListItem>
+												}
+
+											</NestedList>
+										</MudListItem>
+									}
+
+									else
+									{
+
+										<MudListItem OnClick="@(() => OpenQuestion(question.UniqueId))">
+											<div class="d-flex">
+
+												@if (IsQuestionRearrangeSelected)
+												{
+													<input class="order-box form-control form-control-sm" type="text" @bind-value="@(question.DisplayOrder)" />
+												}
+												else
+												{
+													<span class="ms-2"> @(question.DisplayOrder).</span>
+												}
+
+												<span class="ms-2"> @(question.Name)</span>
+											</div>
+										</MudListItem>
+									}
+								</MudList>
+							}
+						</div>
+				
+					</NestedList>
+
+				</MudListItem>
+			</MudList>
+		</MudPaper>
+	</MudItem>
+
+	@* <--------------------> *@
+
+	@* <------Right Panel----> *@
+
+
+	<MudItem xs="12" sm="8">
+		<MudPaper Class="pa-4 question-type-list">
+			@if (IsQuestionTypeSelected)
+			{
+				<MudForm @ref="@form" Model="@model" Class="mud-form">
+
+					@* <------Question-----> *@
+
+					<MudItem Class="row gap-y-3">
+						@if (SelectedQuestionType == QuestionTypes.Hotspot)
+						{
+							<MudItem Class="@(!IsOptionRearrangeSelected ? "col-xxl-9" : "col-xxl-7")">
+								<MudTextField @bind-Value="model.Name" For="@(() => model.Name)" Immediate="true" Label="Enter Question Here" />
+							</MudItem>
+
+							<MudItem Class="row mt-2">
+								<MudImage Src="@(model.Media is null ? "/images/course_image.jpg" : model.Media.Url)" Width="332" Height="250" Alt="Question Image" Elevation="25" Class="rounded-lg ma-4" />
+								<MudIconButton Icon="@Icons.Material.Filled.Image" HtmlTag="label" for="questionImage">
+								</MudIconButton>
+								<InputFile id="questionImage" OnChange="((e) => UploadImages(e, null))" Accept=".png, .jpg" hidden />
+							</MudItem>
+						}
+						else if (SelectedQuestionType == QuestionTypes.DragDropWithText)
+						{
+							<MudItem Class="@(!IsOptionRearrangeSelected ? "col-xxl-9" : "col-xxl-7")">
+								<MudTextField @bind-Value="model.Name" For="@(() => model.Name)" Immediate="true" Label="Enter Question Here" ReadOnly="IsOptionRearrangeSelected" />
+							</MudItem>
+
+							@if (!IsOptionRearrangeSelected)
+							{
+								<MudItem Class="col-2">
+									<MudButton HtmlTag="label" for="questionImage">
+										<MudAvatar>
+											<MudImage Src="@(model.Media is null ? "/images/course_image.jpg" : model.Media.Url)" Alt="Exam Image" Elevation="25" Class="rounded-lg" />
+										</MudAvatar>
+									</MudButton>
+									<InputFile id="questionImage" OnChange="((e) => UploadImages(e, null))" Accept=".png, .jpg" hidden />
+								</MudItem>
+							}
+						}
+						else if (SelectedQuestionType == QuestionTypes.Matching || SelectedQuestionType == QuestionTypes.DragDropWithMatching)
+						{
+							<MudItem Class="@(!IsOptionRearrangeSelected ? "col-xxl-9" : "col-xxl-7")">
+								<MudTextField @bind-Value="model.Name" For="@(() => model.Name)" Immediate="true" Label="Enter Question Here" ReadOnly="IsOptionRearrangeSelected" />
+							</MudItem>
+
+							@if (!IsOptionRearrangeSelected)
+							{
+								<MudItem Class="col-2">
+									<MudButton HtmlTag="label" for="questionImage">
+										<MudAvatar>
+											<MudImage Src="@(model.Media is null ? "/images/course_image.jpg" : model.Media.Url)" Alt="Exam Image" Elevation="25" Class="rounded-lg" />
+										</MudAvatar>
+									</MudButton>
+									<InputFile id="questionImage" OnChange="((e) => UploadImages(e, null))" Accept=".png, .jpg" hidden />
+								</MudItem>
+							}
+						}
+						else if (SelectedQuestionType == QuestionTypes.RecordAudioVideo)
+						{
+							<MudItem Class="col-xxl-7">
+								<MudText>
+									Record audio/video question type allows the quiz-takers to respond to the question by recording a audio/video
+								</MudText>
+							</MudItem>
+
+							<MudItem Class="col-xxl-7">
+								<MudTextField @bind-Value="model.Name" For="@(() => model.Name)" Immediate="true" Label="Tell us something about this video" />
+							</MudItem>
+
+							<MudItem Class="col-xxl-7">
+								<MudCard>
+									<MudCardContent>
+										<div class="d-flex flex-column justify-content-center align-items-center">
+											<div class="mb-3">
+												<MudButton StartIcon="@Icons.Material.Filled.EmergencyRecording" Variant="Variant.Filled" Color="Color.Primary" Class="text-capitalize" DisableElevation="true" Disabled=true>Record</MudButton>
+											</div>
+											<div class="mb-2">
+												<MudButton StartIcon="@Icons.Material.Filled.CloudUpload" Variant="Variant.Filled" Color="Color.Primary" Class="text-capitalize" DisableElevation="true" Disabled=true>Upload</MudButton>
+											</div>
+										</div>
+									</MudCardContent>
+								</MudCard>
+							</MudItem>
+						}
+						else if (SelectedQuestionType == QuestionTypes.Document)
+						{
+							<MudItem Class="col-2 col-xxl-7">
+								<MudButton HtmlTag="label" for="questionImage" Variant="Variant.Filled" Class="text-capitalize" Color="Color.Primary" DisableElevation="true">Upload Document</MudButton>
+								<InputFile id="questionImage" OnChange="((e) => UploadImages(e, null))" Accept=".doc, .pdf, .txt" hidden />
+							</MudItem>
+
+							@if (model.Media is not null)
+							{
+								<MudItem Class="col-3 col-xxl-7">
+									<div class="row align-items-start">
+										<div class="col">
+											<iframe width="560"
+													height="315"
+													src="@(model.Media.Url)"
+													frameborder="0"
+													allowfullscreen>
+											</iframe>
+										</div>
+										<div class="col-auto bg-danger">
+											<MudIconButton Icon="@Icons.Material.Outlined.Close" Size="Size.Medium" OnClick="ClearImage"></MudIconButton>
+										</div>
+									</div>
+								</MudItem>
+							}
+
+							<MudItem Class="col-5 col-xxl-7">
+								<MudTextField @bind-Value="model.Name" For="@(() => model.Name)" Immediate="true" Label="Title : Enter title of document" />
+							</MudItem>
+
+							<MudItem Class="col-2 col-xxl-7">
+								<MudTextField @bind-Value="model.Description" For="@(() => model.Description)" Immediate="true" Label="Description" />
+							</MudItem>
+						}
+						else if (SelectedQuestionType == QuestionTypes.AudioVideo)
+						{
+							@if (model.Media is not null)
+							{
+								<MudItem Class="col-xxl-7">
+									<iframe width="560"
+											height="315"
+											src="@(model.Media.Url)"
+											frameborder="0"
+											allowfullscreen>
+									</iframe>
+								</MudItem>
+							}
+
+							<MudItem Class="col-5 col-xxl-7">
+								<MudButton HtmlTag="label" for="questionImage" Variant="Variant.Filled" Class="text-capitalize" Color="Color.Primary" DisableElevation="true">Upload  File</MudButton>
+								<InputFile id="questionImage" OnChange="((e) => UploadImages(e, null))" Accept=".mp4, .flp, .wav, .mp3" hidden />
+							</MudItem>
+
+
+							<MudItem Class="col-5 col-xxl-7">
+								<MudTextField @bind-Value="model.Name" For="@(() => model.Name)" Immediate="true" Label="Title : Enter title of video" />
+							</MudItem>
+
+							<MudItem Class="col-2 col-xxl-7">
+								<MudTextField @bind-Value="model.Description" For="@(() => model.Description)" Immediate="true" Label="Description" />
+							</MudItem>
+						}
+						else if (SelectedQuestionType == QuestionTypes.Note || SelectedQuestionType == QuestionTypes.Comprehension)
+						{
+							<MudItem Class="col-xxl-7">
+								<MudTextField @bind-Value="model.Name" For="@(() => model.Name)" Immediate="true" Label="Title : Enter title of the article" />
+							</MudItem>
+
+							<MudItem Class="col-7 col-xxl-7">
+								<MudTextField @bind-Value="model.Description" For="@(() => model.Description)" Immediate="true" Label="Description" />
+							</MudItem>
+							<MudItem Class="col-3 col-xxl-3">
+								<MudButton HtmlTag="label" for="questionImage">
+									<MudAvatar>
+										<MudImage Src="@(model.Media is null ? "/images/course_image.jpg" : model.Media.Url)" Alt="Note Image" Elevation="25" Class="rounded-lg" />
+									</MudAvatar>
+								</MudButton>
+								<InputFile id="questionImage" OnChange="((e) => UploadImages(e, null))" Accept=".png, .jpg" hidden />
+							</MudItem>
+
+							@if (SelectedQuestionType == QuestionTypes.Comprehension)
+							{
+								<MudList>
+
+									@foreach (var question in ComprehensionQuestions)
+									{
+										<MudCard Outlined="true" Class="mb-2">
+
+											<MudCardContent>
+												<MudListItem>
+													@question.DisplayOrder. @question.Name
+													<MudList>
+														@foreach (var option in question.Options)
+														{
+															<MudListItem>
+																@(CommonHelper.GetAlphabetByIndex(option.DisplayOrder)). @option.Name
+															</MudListItem>
+														}
+													</MudList>
+												</MudListItem>
+											</MudCardContent>
+
+											<MudCardActions>
+												<MudIconButton OnClick="(() => RemoveComprehensionQuestion(question))" Icon="@Icons.Material.Filled.Delete" Size="@Size.Small"
+															   Variant="@Variant.Filled" aria-label="delete" Color="Color.Error" />
+											</MudCardActions>
+
+
+										</MudCard>
+									}
+
+								</MudList>
+
+								<MudItem>
+									<MudItem Class="row mb-2">
+										<MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" OnClick="@(() => GetQuestionsForComprehension(maxWidth))">Assign Questions</MudButton>
+									</MudItem>
+								</MudItem>
+							}
+						}
+						else
+						{
+							<MudItem Class="@(!IsOptionRearrangeSelected ? "col-xxl-9" : "col-xxl-7")">
+								<MudTextField @bind-Value="model.Name" For="@(() => model.Name)" Immediate="true" Label="Question" ReadOnly="IsOptionRearrangeSelected" />
+							</MudItem>
+
+							@if (!IsOptionRearrangeSelected)
+							{
+								<MudItem Class="col-2">
+									<MudButton HtmlTag="label" for="questionImage">
+										<MudAvatar>
+											<MudImage Src="@(model.Media is null ? "/images/course_image.jpg" : model.Media.Url)" Alt="Exam Image" Elevation="25" Class="rounded-lg" />
+										</MudAvatar>
+									</MudButton>
+									<InputFile id="questionImage" OnChange="((e) => UploadImages(e, null))" Accept=".png, .jpg" hidden />
+								</MudItem>
+							}
+						}
+
+						@if (!string.IsNullOrWhiteSpace(model.UniqueId) && new[] 
+                        {
+					        QuestionTypes.CheckBox, QuestionTypes.MultipleChoice, QuestionTypes.DropDown,
+					        QuestionTypes.OrderList, QuestionTypes.Matching, QuestionTypes.DragDropWithText,  QuestionTypes.DragDropWithMatching
+					    }.Any(type => type == SelectedQuestionType))
+						{
+							if (!IsOptionRearrangeSelected)
+							{
+								<MudTooltip Text="Rearrange Options DisplayOrder">
+									<MudItem Class="col-1 text-end">
+										<MudIconButton Icon=@Icons.Material.Filled.Reorder OnClick="RearrangeOptionsOrder" />
+									</MudItem>
+								</MudTooltip>
+							}
+						}
+						@if (IsOptionRearrangeSelected)
+						{
+							<MudItem Class="col-xxl-4 col-11 text-end">
+								<MudButton Variant="Variant.Filled" Class="text-capitalize" OnClick="RearrangeOptionsOrder">reset</MudButton>
+								<MudButton StartIcon="@Icons.Material.Filled.Save" Variant="Variant.Filled" Color="Color.Primary" OnClick="UpdateOptionDisplayOrder" Class="text-capitalize ms-2">Save Option Display Order</MudButton>
+							</MudItem>
+						}
+
+					</MudItem>
+
+					@* <-------------------> *@
+
+					@* <------Options------> *@
+
+					@* <------Need to manage this using switch cases-----> *@
+
+					@if (SelectedQuestionType == QuestionTypes.CheckBox || SelectedQuestionType == QuestionTypes.FillInTheBlank)
+					{
+						@foreach (var option in model.Options.OrderBy(x => x.DisplayOrder))
+						{
+							var componentId = "optionImage" + option.DisplayOrder;
+
+							@* <----------Check Box-----------> *@
+
+							@if (SelectedQuestionType == QuestionTypes.CheckBox)
+							{
+								@if (IsOptionRearrangeSelected)
+								{
+									<MudItem Class="col-8 px-3">
+										<MudItem Class="row py-2">
+											<MudItem Class="col-1 px-0 d-flex align-items-end">
+												<input class="form-control form-control-sm w-50px" type="text" pattern="[A-Za-z]" maxlength="1" value=@(CommonHelper.GetAlphabetByIndex(option.DisplayOrder)) oninput="@((ChangeEventArgs e) => CommonHelper.ParseDisplayOrder(e.Value.ToString(), option, model))" />
+											</MudItem>
+											<MudItem Class="col-11 ps-9">
+												<MudTextField  @bind-Value="option.Name" For="@(() => option.Name)" ReadOnly="IsOptionRearrangeSelected" Immediate="true" Label="Option" />
+											</MudItem>
+										</MudItem>
+									</MudItem>
+								}
+								else
+								{
+									<MudItem Class="row">
+
+										<MudItem Class="col-1 mt-4 d-flex justify-content-center align-items-center">
+											<MudTooltip Text="Mark Correct">
+												<MudCheckBox Disabled="false" T="bool" @bind-Value="option.ISCorrect"></MudCheckBox>
+											</MudTooltip>
+										</MudItem>
+
+										<MudItem Class="col-8">
+											<MudItem Class="row">
+												<MudItem Class="col-1 px-0 d-flex align-items-end">
+													<MudText>@(CommonHelper.GetAlphabetByIndex(option.DisplayOrder)). </MudText>
+												</MudItem>
+												<MudItem Class="col-11 px-0">
+													<MudTextField Class="px-0" @bind-Value="option.Name" For="@(() => option.Name)" Immediate="true" Label="Option" />
+												</MudItem>
+											</MudItem>
+										</MudItem>
+
+										<MudItem Class="col-2">
+											<MudButton HtmlTag="label" for=@componentId>
+												<MudAvatar>
+													<MudImage Src="@(option.Media is null ? "/images/course_image.jpg" : option.Media.Url)" Alt="Exam Image" Elevation="25" Class="rounded-lg" />
+												</MudAvatar>
+											</MudButton>
+											<InputFile id=@componentId OnChange="(e)=>UploadImages(e, option, false)" Accept=".png, .jpg" hidden />
+										</MudItem>
+
+										<MudItem Class="col-1 mt-2 justify-content-center">
+											<MudTooltip Text="Remove Options">
+												<MudIconButton Size="Size.Medium" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => RemoveOption(option))"></MudIconButton>
+											</MudTooltip>
+										</MudItem>
+
+									</MudItem>
+								}
+							}
+
+							@* <------Fill In The Blanks------> *@
+
+							@if (SelectedQuestionType == QuestionTypes.FillInTheBlank)
+							{
+								<MudItem Class="row">
+									<MudItem Class="col-11">
+										<MudItem Class="row">
+											<MudItem Class="col px-0">
+												<MudTextField @bind-Value="option.Name" For="@(() => option.Name)" Immediate="true" Label="Option" />
+											</MudItem>
+										</MudItem>
+									</MudItem>
+									<MudItem Class="col-1 mt-2 justify-content-center">
+										<MudTooltip Text="Remove Options">
+											<MudIconButton Size="Size.Medium" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => RemoveOption(option))"></MudIconButton>
+										</MudTooltip>
+									</MudItem>
+								</MudItem>
+							}
+						}
+					}
+
+					@* <-----------DragDrop Text-----------> *@
+
+					@if (SelectedQuestionType == QuestionTypes.DragDropWithText)
+					{
+						<MudItem Class="row mt-4">
+							<MudItem><b>Correct Answer(s)</b></MudItem>
+						</MudItem>
+
+						@foreach (var option in model.Options.Where(option => !option.ISInCorrectMatch).OrderBy(option => option.DisplayOrder))
+						{
+							<MudItem Class="row">
+								@if (IsOptionRearrangeSelected)
+								{
+									<MudItem Class="col-8">
+										<MudItem Class="row">
+											<MudItem Class="col-2 px-0 d-flex align-items-end">
+												<input class="form-control form-control-sm w-50px" type="text" pattern="[A-Za-z]" maxlength="1" value=@(CommonHelper.GetAlphabetByIndex(option.DisplayOrder)) oninput="@((ChangeEventArgs e) => CommonHelper.ParseDisplayOrder(e.Value.ToString(), option, model))" />
+											</MudItem>
+											<MudItem Class="col-2 px-0">
+												<MudTextField Class="px-0" @bind-Value="option.Name" For="@(() => option.Name)" ReadOnly="IsOptionRearrangeSelected" Immediate="true" Label="Option" />
+											</MudItem>
+										</MudItem>
+									</MudItem>
+								}
+								else
+								{
+									<MudItem Class="col-2 d-flex align-items-end">
+										<MudText>
+											@(CommonHelper.GetAlphabetByIndex(option.DisplayOrder)).
+										</MudText>
+									</MudItem>
+
+									<MudItem Class="col-8">
+										<MudTextField Class="px-0" @bind-Value="option.Name" For="@(() => option.Name)" ReadOnly="IsOptionRearrangeSelected" Immediate="true" Label="Option" />
+									</MudItem>
+
+									<MudItem Class="col-2 mt-2 justify-content-center">
+										<MudTooltip Text="Remove Options">
+											<MudIconButton Size="Size.Medium" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => RemoveOption(option))"></MudIconButton>
+										</MudTooltip>
+									</MudItem>
+								}
+							</MudItem>
+						}
+
+						<MudItem Class="col">
+							<MudTooltip Text="Add Blank">
+								<MudIconButton Size="Size.Medium" Icon="@Icons.Material.Filled.AddCircle" Color="Color.Default" OnClick="@(() => CommonHelper.AddBlank(model))"></MudIconButton>
+							</MudTooltip>
+						</MudItem>
+
+						<MudItem Class="row mt-4">
+							<MudItem Class="col">
+								<b>Add incorrect answers (distractors)</b>
+							</MudItem>
+						</MudItem>
+
+						<MudItem Class="row gap-y-3">
+
+							@foreach (var option in model.Options.Where(option => option.ISInCorrectMatch).OrderBy(option => option.DisplayOrder))
+							{
+								<MudItem Class="col-xxl-9">
+									<MudTextField @bind-Value="option.Name" For="@(() => option.Name)" Immediate="true" Label="Distractors" />
+								</MudItem>
+
+								<MudItem Class="col-2 mt-2 justify-content-center">
+									<MudTooltip Text="Remove Options">
+										<MudIconButton Size="Size.Medium" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => RemoveOption(option))"></MudIconButton>
+									</MudTooltip>
+								</MudItem>
+							}
+						</MudItem>
+
+						<MudItem Class="col">
+							<MudTooltip Text="Add Incorrect Match">
+								<MudIconButton Size="Size.Medium" Icon="@Icons.Material.Filled.AddCircle" Color="Color.Default" OnClick="@(() => AddIncorrectMatch())"></MudIconButton>
+							</MudTooltip>
+						</MudItem>
+					}
+
+					@* <-----------Matching-----------> *@
+
+					@if (SelectedQuestionType == QuestionTypes.Matching || SelectedQuestionType == QuestionTypes.DragDropWithMatching)
+					{
+						<MudItem Class="row mt-4">
+							<MudItem Class="col-6"><b>Choice</b></MudItem>
+							<MudItem Class="col-6"><b>Match</b></MudItem>
+						</MudItem>
+
+						@foreach (var option in model.Options.Where(option => !option.ISInCorrectMatch).OrderBy(option => option.DisplayOrder))
+						{
+							var componentId = "optionImage " + option.DisplayOrder;
+
+							<MudItem Class="row">
+
+								@if (IsOptionRearrangeSelected)
+								{
+									<MudItem Class="col-8">
+										<MudItem Class="row">
+											<MudItem Class="col-2 px-0 d-flex align-items-end">
+												<input class="form-control form-control-sm w-50px" type="text" pattern="[A-Za-z]" maxlength="1" value=@(CommonHelper.GetAlphabetByIndex(option.DisplayOrder)) oninput="@((ChangeEventArgs e) => CommonHelper.ParseDisplayOrder(e.Value.ToString(), option, model))" />
+											</MudItem>
+											<MudItem Class="col-2 px-0">
+												<MudTextField Class="px-0" @bind-Value="option.Name" For="@(() => option.Name)" ReadOnly="IsOptionRearrangeSelected" Immediate="true" Label="Option" />
+											</MudItem>
+											<MudItem Class="col-3">
+												<MudAvatar>
+													<MudImage Src="@(option.Media is null ? "/images/course_image.jpg" : option.Media.Url)" Alt="Option Image" Elevation="25" Class="rounded-lg" />
+												</MudAvatar>
+											</MudItem>
+											<MudItem Class="col-5">
+												<MudTextField @bind-Value="option.Match" For="@(() => option.Match)" ReadOnly="IsOptionRearrangeSelected" Immediate="true" Label="Match" />
+											</MudItem>
+										</MudItem>
+									</MudItem>
+								}
+								else
+								{
+									<MudItem Class="col-1 d-flex align-items-end">
+										<MudText>@(CommonHelper.GetAlphabetByIndex(option.DisplayOrder)). </MudText>
+									</MudItem>
+
+									<MudItem Class="col-2">
+										<MudTextField @bind-Value="option.Name" For="@(() => option.Name)" Immediate="true" Label="Choice" />
+									</MudItem>
+
+									<MudItem Class="col-3">
+										<MudButton HtmlTag="label" for=@componentId>
+											<MudAvatar>
+												<MudImage Src="@(option.Media is null ? "/images/course_image.jpg" : option.Media.Url)" Alt="Option Image" Elevation="25" Class="rounded-lg" />
+											</MudAvatar>
+										</MudButton>
+										<InputFile id=@componentId OnChange="(e)=>UploadImages(e, option, false)" Accept=".png, .jpg" hidden />
+									</MudItem>
+
+									<MudItem Class="col-6">
+										<MudTextField @bind-Value="option.Match" For="@(() => option.Match)" Immediate="true" Label="Match" />
+									</MudItem>
+								}
+							</MudItem>
+						}
+
+						@if (!IsOptionRearrangeSelected)
+						{
+							<MudItem Class="col">
+								<MudTooltip Text="Add Option">
+									<MudIconButton Size="Size.Medium" Icon="@Icons.Material.Filled.AddCircle" Color="Color.Default" OnClick="@(() => AddOptions())"></MudIconButton>
+								</MudTooltip>
+							</MudItem>
+
+							<MudItem Class="row mt-4">
+								<MudItem Class="col">
+									<b>Add incorrect answers (distractors)</b>
+								</MudItem>
+							</MudItem>
+
+							<MudItem Class="row gap-y-3">
+
+								@foreach (var option in model.Options.Where(option => option.ISInCorrectMatch).OrderBy(option => option.DisplayOrder))
+								{
+									<MudItem Class="col-xxl-9">
+										<MudTextField @bind-Value="option.Name" For="@(() => option.Name)" Immediate="true" Label="Distractors" />
+									</MudItem>
+
+									<MudItem Class="col-2 mt-2 justify-content-center">
+										<MudTooltip Text="Remove Options">
+											<MudIconButton Size="Size.Medium" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => RemoveOption(option))"></MudIconButton>
+										</MudTooltip>
+									</MudItem>
+								}
+							</MudItem>
+
+							<MudItem Class="col">
+								<MudTooltip Text="Add Incorrect Match">
+									<MudIconButton Size="Size.Medium" Icon="@Icons.Material.Filled.AddCircle" Color="Color.Default" OnClick="@(() => AddIncorrectMatch())"></MudIconButton>
+								</MudTooltip>
+							</MudItem>
+						}
+					}
+
+					@* <------True False------> *@
+
+					@if (SelectedQuestionType == QuestionTypes.TrueFalse)
+					{
+						<MudRadioGroup T="int" @bind-Value='SelectedOption'>
+
+							@foreach (var option in model.Options.OrderBy(option => option.DisplayOrder))
+							{
+								var componentId = "optionImage " + option.DisplayOrder;
+
+								<MudItem Class="row">
+									<MudItem Class="col-1 mt-4 d-flex justify-content-center align-items-center">
+										<MudTooltip Text="Mark Correct">
+											<MudRadio T="int" Disabled="false" Color="Color.Primary" Value=@(option.DisplayOrder) />
+										</MudTooltip>
+									</MudItem>
+
+									<MudItem Class="col-8">
+										<MudTextField Class="px-0" @bind-Value="option.Name" For="@(() => option.Name)" Immediate="true" Label="Option" />
+									</MudItem>
+
+									<MudItem Class="col-2">
+										<MudButton HtmlTag="label" for=@componentId>
+											<MudAvatar>
+												<MudImage Src="@(option.Media is null ? "/images/course_image.jpg" : option.Media.Url)" Alt="Option Image" Elevation="25" Class="rounded-lg" />
+											</MudAvatar>
+										</MudButton>
+										<InputFile id=@componentId OnChange="(e)=>UploadImages(e, option, false)" Accept=".png, .jpg" hidden />
+									</MudItem>
+
+								</MudItem>
+							}
+
+						</MudRadioGroup>
+					}
+
+					@* <------Multiple Choice and DropDown------> *@
+
+					@if (SelectedQuestionType is QuestionTypes.MultipleChoice or QuestionTypes.DropDown or QuestionTypes.OrderList)
+					{
+						<MudRadioGroup T="int" @bind-Value='SelectedOption'>
+
+							@foreach (var option in model.Options.OrderBy(option => option.DisplayOrder))
+							{
+								var componentId = "optionImage " + option.DisplayOrder;
+
+								@if (IsOptionRearrangeSelected)
+								{
+									<MudItem Class="col-8">
+										<MudItem Class="row">
+											<MudItem Class="col-1 px-0 d-flex align-items-end">
+												<input class="form-control form-control-sm w-50px" type="text" pattern="[A-Za-z]" maxlength="1" value=@(CommonHelper.GetAlphabetByIndex(option.DisplayOrder)) oninput="@((ChangeEventArgs e) => CommonHelper.ParseDisplayOrder(e.Value.ToString(), option, model))" />
+											</MudItem>
+											<MudItem Class="col-11 px-0">
+												<MudTextField Class="px-0" @bind-Value="option.Name" For="@(() => option.Name)" ReadOnly="IsOptionRearrangeSelected" Immediate="true" Label="Option" />
+											</MudItem>
+										</MudItem>
+									</MudItem>
+								}
+								else
+								{
+									<MudItem Class="row">
+
+										@if (SelectedQuestionType is not QuestionTypes.OrderList)
+										{
+											<MudItem Class="col-1 mt-4 d-flex justify-content-center align-items-center">
+												<MudTooltip Text="Mark Correct">
+													<MudRadio T="int" Disabled="false" Color="Color.Primary" Value="@(option.DisplayOrder)" />
+												</MudTooltip>
+											</MudItem>
+										}
+
+										<MudItem Class="col-8">
+											<MudItem Class="row">
+												<MudItem Class="col-1 px-0 d-flex align-items-end">
+													<MudText>@(CommonHelper.GetAlphabetByIndex(option.DisplayOrder)).</MudText>
+												</MudItem>
+												<MudItem Class="col-11 px-0">
+													<MudTextField Class="px-0" @bind-Value="option.Name" For="@(() => option.Name)" Immediate="true" Label="Option" />
+												</MudItem>
+											</MudItem>
+										</MudItem>
+
+										<MudItem Class="col-2">
+											@if (SelectedQuestionType is QuestionTypes.MultipleChoice or QuestionTypes.OrderList)
+											{
+												<MudButton HtmlTag="label" for=@componentId>
+													<MudAvatar>
+														<MudImage Src="@(option.Media is null ? "/images/course_image.jpg" : option.Media.Url)" Alt="Option Image" Elevation="25" Class="rounded-lg" />
+													</MudAvatar>
+												</MudButton>
+												<InputFile id=@componentId OnChange="(e)=> UploadImages(e, option, false)" Accept=".png, .jpg" hidden />
+											}
+										</MudItem>
+
+										<MudItem Class="col-1 mt-2 justify-content-center">
+											<MudTooltip Text="Remove Options">
+												<MudIconButton Size="Size.Medium" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => RemoveOption(option))"></MudIconButton>
+											</MudTooltip>
+										</MudItem>
+									</MudItem>
+								}
+							}
+
+						</MudRadioGroup>
+
+						@if (SelectedQuestionType is QuestionTypes.OrderList && !IsOptionRearrangeSelected)
+						{
+							<MudText>Sort the list items in Order before saving the question</MudText>
+						}
+					}
+
+					@* <------Selected question is not True False and Essay------> *@
+
+					@if (SelectedQuestionType != QuestionTypes.TrueFalse && SelectedQuestionType != QuestionTypes.Essay)
+					{
+						<MudItem Class="row">
+							@if (SelectedQuestionType == QuestionTypes.FillInTheBlank)
+							{
+								<MudItem Class="col-1">
+									<MudTooltip Text="Add Blank">
+										<MudIconButton Size="Size.Medium" Icon="@Icons.Material.Filled.AddCircle" Color="Color.Default" OnClick="@(() => CommonHelper.AddBlank(model))"></MudIconButton>
+									</MudTooltip>
+								</MudItem>
+							}
+							else if (SelectedQuestionType == QuestionTypes.Note || SelectedQuestionType == QuestionTypes.AudioVideo ||
+							SelectedQuestionType == QuestionTypes.Comprehension || SelectedQuestionType == QuestionTypes.Document ||
+							SelectedQuestionType == QuestionTypes.RecordAudioVideo || SelectedQuestionType == QuestionTypes.DragDropWithText ||
+							SelectedQuestionType == QuestionTypes.DragDropWithMatching || SelectedQuestionType == QuestionTypes.Hotspot)
+							{
+
+							}
+							else
+							{
+								@if (!IsOptionRearrangeSelected)
+								{
+									<MudItem Class="col">
+										<MudTooltip Text="Add Options">
+											<MudIconButton Size="Size.Medium" Icon="@Icons.Material.Filled.AddCircle" Color="Color.Default" OnClick="@(() => AddOptions())"></MudIconButton>
+										</MudTooltip>
+									</MudItem>
+								}
+							}
+						</MudItem>
+					}
+
+				</MudForm>
+				@if (!IsOptionRearrangeSelected)
+				{
+					<MudItem Class="row py-3">
+						<MudItem Class="col d-flex justify-content-end">
+							<MudButton StartIcon="@Icons.Material.Filled.Save" Variant="Variant.Filled" Color="Color.Primary" Class="me-3 text-capitalize" DisableElevation="true" Disabled=@(IsQuestionRearrangeSelected || IsOptionRearrangeSelected) OnClick="@(() => SaveQuestions(model))">Save</MudButton>
+							<MudButton Variant="Variant.Filled" Class="text-capitalize" Color="Color.Primary" DisableElevation="true" OnClick="@(() => RemoveQuestion(model))">Remove</MudButton>
+						</MudItem>
+					</MudItem>
+					@* <MudItem Class="row">
+			<MudItem Class="col"></MudItem>
+			<MudItem Class="col d-flex justify-content-end">
+			<MudItem Class="row">
+			<MudButton Variant="Variant.Filled" Class="text-capitalize" Color="Color.Primary" DisableElevation="true" OnClick="@(() => RemoveQuestion(model))">Remove</MudButton>
+			</MudItem>
+			</MudItem>
+			</MudItem> *@
+				}
+			}
+			else
+			{
+				<div class="align-items-center d-flex flex-column h-100 justify-content-center gap-y-2">
+					<img src="/images/question.png" width="200">
+					<p>Let's add a question.</p>
+					<MudButton StartIcon="@Icons.Material.Filled.AddCircle" Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" OnClick="@(() => OpenDialog(maxWidth))" Class="text-capitalize">New Question</MudButton>
+				</div>
+			}
+		</MudPaper>
+	</MudItem>
+
+	@* <--------------------> *@
+
+</MudGrid>

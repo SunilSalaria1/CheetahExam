@@ -1,0 +1,79 @@
+﻿@using static CheetahExam.WebUI.Shared.Constants.Constant
+
+<MudDialog ClassContent="py-4" ClassActions="px-6 pb-4 pt-0">
+    <DialogContent>
+        <MudText Typo="Typo.h6" GutterBottom="true">Delete</MudText>
+        <MudDivider DividerType="DividerType.FullWidth" Class="fw-bolder" Light=false />
+        <MudText Class="py-4">Do you really want to @(DialogType == "Delete" ? "Delete" : "Retrieve") this record?</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Class="text-capitalize me-1 fs-6" StartIcon="@Icons.Material.Filled.Cancel"
+                   Size=Size.Medium Variant="Variant.Filled">Cancel</MudButton>
+        <MudButton Class="text-capitalize fs-6" Color=@(DialogType == "Delete" ? Color.Error : Color.Warning) StartIcon="@Icons.Material.Filled.Delete" Size=Size.Medium Variant="Variant.Filled" OnClick="Submit">@((DialogType == "Delete") ? "Delete" : "Retrieve")</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    #region Fields
+
+    #region Parameters
+
+    [CascadingParameter]
+    private MudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter]
+    public string DialogType { get; set; } = null!;
+
+    [Parameter]
+    public string UniqueId { get; set; } = null!;
+
+    #endregion
+
+    #region Services
+
+    [Inject] IExamsClient ExamsClient { get; set; } = null!;
+
+    [Inject] ISnackbar Snackbar { get; set; } = null!;
+
+    #endregion
+
+    private string CommandsReturnStatus { get; set; } = string.Empty;
+
+    #endregion
+
+    #region Method
+
+    private async Task Submit()
+    {
+        CommandsReturnStatus = await ExamsClient.DeleteAsync(UniqueId);
+
+        string message;
+        MudBlazor.Severity severity;
+
+        switch (CommandsReturnStatus)
+        {
+            case "Retrieved":
+            case "Deleted":
+                message = $"Record {CommandsReturnStatus} Successfully!";
+                severity = MudBlazor.Severity.Warning;
+                MudDialog.Close(DialogResult.Ok(true));
+                break;
+
+            case "NotFound":
+                message = "Name Value does not exist. Please add the right one!";
+                severity = MudBlazor.Severity.Error;
+                break;
+
+            default:
+                // Handle unexpected status if needed
+                return;
+        }
+
+        Snackbar.Add(message, severity);
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    #endregion
+}

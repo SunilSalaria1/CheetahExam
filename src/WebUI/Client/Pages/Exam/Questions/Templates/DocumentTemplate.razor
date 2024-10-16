@@ -1,0 +1,23 @@
+﻿<MudForm Model="Model" Form="Form">
+
+    <MudItem Class="row">
+        <MudItem Class="col"><b>Upload Audio/Video</b></MudItem>
+    </MudItem>
+
+    <MudItem Class="row">
+        <span>@Model.Name</span>
+    </MudItem>
+
+    <MudItem Class="row mt-2">
+        <span>@Model.Description</span>
+    </MudItem>
+
+    <MudItem Class="row">
+        <MudItem Class="col d-flex justify-content-end">
+            <MudItem Class="row">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" Disabled="true">Submit</MudButton>
+            </MudItem>
+        </MudItem>
+    </MudItem>
+
+</MudForm>

@@ -1,0 +1,58 @@
+﻿@page "/users"
+@attribute [Authorize(Roles = Constant.UserRoles.SuperAdmin)]
+
+@using CheetahExam.WebUI.Shared.Common.Models.Users
+@using CheetahExam.WebUI.Shared.Constants
+@using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims
+
+<div class="row">
+    <div class="col-sm-12">
+        <MudCard Elevation="0">
+            <MudItem Class="row">
+                <MudItem Class="col p-0">
+                    <MudText Typo="Typo.h6" GutterBottom="true">Admins</MudText>
+                    <MudDivider DividerType="DividerType.FullWidth" Class="fw-bolder" Light=false />
+                </MudItem>
+            </MudItem>
+        </MudCard>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <MudCard Elevation="0">
+            <MudItem Class="row pb-2">
+                <MudItem Class="col d-flex justify-end align-items-end p-0">
+                    <MudButton Href=@($"/users/edit") Class="ms-5 text-capitalize mud-button-40 fs-6" StartIcon="@Icons.Material.Filled.AddCircle" Size=Size.Medium Variant="Variant.Filled" Color="Color.Primary">Create New User</MudButton>
+                </MudItem>
+            </MudItem>
+        </MudCard>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <MudDataGrid Class="p-2" Elevation="4" T="UserDto" Items="@Users" SortMode="SortMode.Multiple"
+                     Hover="true" Dense="true" Filterable="true" Bordered="true" Hideable="true" Loading=@ISLoading>
+            <Columns>
+                <PropertyColumn Property="x => x.FirstName" Title="First Name" Sortable="true" Filterable="false" />
+                <PropertyColumn Property="x => x.LastName" Title="Last Name" Sortable="true" Filterable="false" />
+                <TemplateColumn Sortable="false" Filterable="false" Title="Email">
+                    <CellTemplate>
+                        <MudLink OnClick="()=>ChangeCurrentUser(context.Item)">@context.Item.Email</MudLink>
+                    </CellTemplate>
+                </TemplateColumn>
+                <PropertyColumn Property="x => string.Join(',' , x.Roles)" Title="Role" Sortable="true" Filterable="false" />
+                <PropertyColumn Property="@(x => x.ISActive?"Active":"Inactive")" Title="Status" Sortable="false" Filterable="false" />
+                <TemplateColumn Sortable="false" Filterable="false">
+                    <CellTemplate>
+                        <MudStack Row Spacing="2" Class="d-flex justify-content-center">
+                            <MudTooltip Text="Edit">
+                                <MudIconButton Href=@($"/users/edit/{context.Item.UniqueId}") Icon="@Icons.Material.Filled.Edit" Size="@Size.Small" Variant="@Variant.Filled" aria-label="edit" Color="@Color.Primary" Disabled="@context.Item.Roles.Contains(Constant.UserRoles.SuperAdmin)" />
+                            </MudTooltip>
+                        </MudStack>
+                    </CellTemplate>
+                 </TemplateColumn>
+             </Columns>
+         </MudDataGrid>
+     </div>
+ </div>

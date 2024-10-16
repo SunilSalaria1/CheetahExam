@@ -1,0 +1,163 @@
+﻿@using CheetahExam.WebUI.Client.Pages.Exam.Questions.Templates
+@using static CheetahExam.WebUI.Shared.Enums.Enum
+
+<MudDialog ClassActions="px-6 py-4 position-fixed bottom-0 end-0 w-100 bg-white" ClassContent="px-0">
+	<DialogContent>
+        <MudText Typo="Typo.h6" Class="mb-1 px-4">Question Types</MudText>
+        <MudDivider DividerType="DividerType.FullWidth" Class="fw-bolder" Light=false />
+        <MudCardContent>
+            <MudGrid>
+				<MudItem xs="12" sm="4" Class="question-box px-0">
+                    <MudList Clickable="true" Dense="true" DisableGutters="true">
+                        @* @foreach (var item in Types)
+                        {
+							<MudListItem Class="px-4" OnClick="@(()=> ChooseType(item.Id))">@item.Index. @item.Type</MudListItem>
+                        } *@
+						@foreach (var item in Types)
+						{
+							<MudListItem OnClick="@(()=> ChooseType(item.Id))" Class="px-4">
+								<MudIcon Icon="@item.Icon" Class="me-1" /> @item.Type
+							</MudListItem>
+						}
+						@* <MudListItem Class="px-5" OnClick="@(()=> ImportQuestions())">Import Exams</MudListItem> *@
+                    </MudList>
+                </MudItem>
+				<MudItem xs="12" sm="8" Class="question-box">
+                    <MudText Class="py-2 d-block" Typo="Typo.caption">Sample Question</MudText>
+                    @switch (SelectedType)
+                    {
+                        case QuestionTypes.CheckBox:
+                            <MudCard Class="p-2">
+                                <CheckBoxTemplate />
+                            </MudCard>
+                            <MudText Class="py-2">Allows you to provide multiple possible answers in which only one is correct.</MudText>
+                            break;
+
+                        case QuestionTypes.MultipleChoice:
+                            <MudCard Class="p-2">
+                                <RadioButtonTemplate />
+                            </MudCard>
+                            <MudText Class="py-2">Allows you to provide multiple answers that are correct.</MudText>
+                            break;
+
+                        case QuestionTypes.TrueFalse:
+                            <MudCard Class="p-2">
+                                <TrueFalseTemplate />
+                            </MudCard>
+                            <MudText Class="py-2">Allows you to test a yes/no or true/false statement.</MudText>
+                            break;
+
+                        case QuestionTypes.FillInTheBlank:
+                            <MudCard Class="p-2">
+                                <FillBlanksTemplate />
+                            </MudCard>
+                            <MudText Class="py-2">Allows you to leave space for a short text-based answer.</MudText>
+                            break;
+
+                        case QuestionTypes.DropDown:
+                            <MudCard Class="p-2">
+                                <DropdownTemplate />
+                            </MudCard>
+                            <MudText Class="py-2">Allows you to provide multiple answers in which only one is correct.</MudText>
+                            break;
+
+                        case QuestionTypes.Essay:
+                            <MudCard Class="p-2">
+                                <EssayTemplate />
+                            </MudCard>
+                            <MudText Class="py-2">Allows you to ask for a detailed text-based answer.</MudText>
+                            break;
+
+                        case QuestionTypes.OrderList:
+                            <MudCard Class="p-2">
+                                <OrderListTemplate />
+                            </MudCard>
+                            <MudText Class="py-2">Allows you to provide a set of responses that can be arranged in a specified order.</MudText>
+                            break;
+
+                        case QuestionTypes.Note:
+                            <MudCard Class="p-2">
+                                <NoteTemplate />
+                            </MudCard>
+                            <MudText Class="py-2"> Allows you to leave a note for quiz takers.</MudText>
+                            break;
+
+                        case QuestionTypes.AudioVideo:
+                            <MudCard Class="p-2">
+                                <AudioVideoTemplate />
+                            </MudCard>
+                            <MudText Class="py-2"> Allows you to upload an audio/video file to your quiz.</MudText>
+                            break;
+
+                        case QuestionTypes.Comprehension:
+                            <MudCard Class="p-2">
+                                <Comprehension />
+                            </MudCard>
+                            <MudText Class="py-2">
+                                Allows you to Add multiple questions to a single passage or essay.
+                            </MudText>
+                            break;
+
+                        case QuestionTypes.Document:
+                            <MudCard Class="p-2">
+                                <DocumentTemplate />
+                            </MudCard>
+                            <MudText Class="py-2">
+                                Allows you to provide an option to upload a document or image.
+                            </MudText>
+                            break;
+
+                        case QuestionTypes.RecordAudioVideo:
+                            <MudCard Class="p-2">
+                                <RecordAudioVideoTemplate />
+                            </MudCard>
+                            <MudText Class="py-2">
+                                Allows you to collect responses in a recorded audio/video format.
+                            </MudText>
+                            break;
+
+                        case QuestionTypes.Matching:
+                            <MudCard Class="p-2">
+                                <MatchingTemplate />
+                            </MudCard>
+                            <MudText Class="py-2">
+                                Allows you to set up matching sets.
+                            </MudText>
+                            break;
+
+                        case QuestionTypes.DragDropWithText:
+                            <MudCard Class="p-2">
+                                <DragDropTemplate SelectedOption="HandleDragDropResult" />
+                            </MudCard>
+                            <MudText Class="py-2">
+                                Allows quiz takers to drag their responses from a list of options set by you, into empty response boxes.
+                            </MudText>
+                            break;
+
+                        case QuestionTypes.Hotspot:
+                            <MudCard Class="p-2">
+                                <HotspotTemplate/>
+                            </MudCard>
+                            <MudText Class="py-2">
+                                Allows you to show an image and set up hotspots to indicate the correct answer.
+                            </MudText>
+                            break;
+
+                        default:
+                            break;
+                    }
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+    </DialogContent>
+	<DialogActions>
+        <MudButton Variant="Variant.Filled" OnClick="@Cancel" style="display: flex; align-items: center;" Class="fs-6 me-1 text-capitalize">
+            <MudIcon Icon="@Icons.Material.Filled.Cancel" Color="Color.Dark" style="margin-right: 8px; font-size:20px"/>
+            <span>Cancel</span>
+        </MudButton>
+		<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => Select())" style="margin-left: 10px; display: flex; align-items: center;" Class="fs-6 me-1 text-capitalize">
+			<MudIcon Icon="@Icons.Material.Filled.PlayArrow" style="margin-right: 8px; font-size:20px" />
+            <span>Select</span>
+        </MudButton>
+    </DialogActions>
+</MudDialog>

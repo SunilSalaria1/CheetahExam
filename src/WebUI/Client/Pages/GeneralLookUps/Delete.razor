@@ -1,0 +1,13 @@
+﻿<MudDialog ClassContent="py-4" ClassActions="px-6 pb-4 pt-0">
+    <DialogContent>
+		<MudText Typo="Typo.h6" GutterBottom="true">Delete</MudText>
+		<MudDivider DividerType="DividerType.FullWidth" Class="fw-bolder" Light=false />
+		<MudText Class="py-4">Do you really want to delete this record ?</MudText>
+    </DialogContent>
+    <DialogActions>
+		<MudButton OnClick="Cancel" Class="text-capitalize me-1 fs-6" StartIcon="@Icons.Material.Filled.Cancel"
+				   Size=Size.Medium Variant="Variant.Filled">Cancel</MudButton>
+		<MudButton Class="text-capitalize fs-6" Color="@Color.Error" OnClick="Submit" StartIcon="@Icons.Material.Filled.Delete"
+				   Size=Size.Medium Variant="Variant.Filled">Delete</MudButton>
+    </DialogActions>
+</MudDialog>

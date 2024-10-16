@@ -1,0 +1,20 @@
+﻿@inherits MudComponentBase
+
+<MudDialog ClassContent="p-0 d-flex justify-content-end" @bind-IsVisible="IsVisible" Options="DialogOptions">
+    <DialogContent>
+        <MudIconButton Class="position-absolute white-text" OnClick="ClosePopupImage" Icon="@Icons.Material.Filled.Close" Color="Color.Default" aria-label="delete"></MudIconButton>
+        <MudImage Src="@ImageUrl" Width="400" Alt="Exam Image" Elevation="25" />
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public string? ImageUrl { get; set; }
+    [Parameter] public DialogOptions DialogOptions { get; set; }
+    [Parameter] public EventCallback<bool> PopupClosed { get; set; }
+
+    private void ClosePopupImage()
+    {
+        PopupClosed.InvokeAsync(true);
+    }
+}

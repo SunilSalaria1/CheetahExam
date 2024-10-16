@@ -1,0 +1,59 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+      <RootNamespace>CheetahExam.WebUI.Client</RootNamespace>
+      <AssemblyName>CheetahExam.WebUI.Client</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Pages\Claims\**" />
+    <Compile Remove="Pages\Organisations\**" />
+    <Compile Remove="Pages\Todo\**" />
+    <Content Remove="Pages\Claims\**" />
+    <Content Remove="Pages\Organisations\**" />
+    <Content Remove="Pages\Todo\**" />
+    <EmbeddedResource Remove="Pages\Claims\**" />
+    <EmbeddedResource Remove="Pages\Organisations\**" />
+    <EmbeddedResource Remove="Pages\Todo\**" />
+    <None Remove="Pages\Claims\**" />
+    <None Remove="Pages\Organisations\**" />
+    <None Remove="Pages\Todo\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Pages\Accounts\Registration.razor.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Pages\Accounts\Registration.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazored.FluentValidation" Version="2.0.3" />
+    <PackageReference Include="Blazored.LocalStorage" Version="4.4.0" />
+    <PackageReference Include="EPPlus" Version="7.0.8" />
+    <PackageReference Include="FluentValidation" Version="10.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="MudBlazor" Version="6.12.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Scrutor" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\excels\2024 Exam Template for New System.xlsx">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,30 @@
+﻿@using CheetahExam.WebUI.Shared.Common.Models.Exams
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            Select Questions
+        </MudText>
+    </TitleContent>
+
+    <DialogContent>
+        <MudDataGrid Class="mt-2" T="QuestionDto" MultiSelection="true" Items="@Items" SelectedItemsChanged="@((HashSet<QuestionDto> items) => SelectedItemsChanged(items))">
+            <Columns>
+                <SelectColumn T="QuestionDto"/>
+                <PropertyColumn Property="x => x.Name" Title="Questions" />
+            </Columns>
+        </MudDataGrid>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" OnClick="@Cancel" Class="d-flex align-items-center">
+			<MudIcon Icon="@Icons.Material.Filled.Cancel" Color="Color.Dark"/>
+            <strong>Cancel</strong>
+        </MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => AssignQuestions())" Class="ms-2 d-flex align-items-center">
+            <MudIcon Icon="@Icons.Material.Filled.PlayArrow" Class="me-2"/>
+            <strong>Select</strong>
+        </MudButton>
+    </DialogActions>
+
+</MudDialog>

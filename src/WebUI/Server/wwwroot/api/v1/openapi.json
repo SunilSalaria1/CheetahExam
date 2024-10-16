@@ -1,0 +1,2633 @@
+{
+  "x-generator": "NSwag v13.18.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CleanArchitecture API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/files/upload": {
+      "post": {
+        "tags": [
+          "Files"
+        ],
+        "summary": "Upload a File",
+        "description": "Upload a new Image File.",
+        "operationId": "Files_Upload",
+        "requestBody": {
+          "x-name": "fileDetail",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FileDetailDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator",
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/files/uploadMultiple": {
+      "post": {
+        "tags": [
+          "Files"
+        ],
+        "summary": "Upload Multiple images",
+        "description": "Upload a collection of Files.",
+        "operationId": "Files_UploadMultiple",
+        "requestBody": {
+          "x-name": "fileDetailCollection",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FileDetailCollectionDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaCollectionDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator",
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/files/delete/{filePath}": {
+      "delete": {
+        "tags": [
+          "Files"
+        ],
+        "summary": "Delete an exisitng file",
+        "description": "Delete an exisitng file with file path.",
+        "operationId": "Files_Delete",
+        "parameters": [
+          {
+            "name": "filePath",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator",
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/generalLookUps/getAll": {
+      "get": {
+        "tags": [
+          "GeneralLookUps"
+        ],
+        "summary": "List all general lookups  types",
+        "operationId": "GeneralLookUps_GetAll",
+        "parameters": [
+          {
+            "name": "isIncludeArchived",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GeneralLookUpDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/generalLookUps/create": {
+      "post": {
+        "tags": [
+          "GeneralLookUps"
+        ],
+        "operationId": "GeneralLookUps_Create",
+        "requestBody": {
+          "x-name": "generalLookUp",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GeneralLookUpDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/generalLookUps/update": {
+      "put": {
+        "tags": [
+          "GeneralLookUps"
+        ],
+        "operationId": "GeneralLookUps_Update",
+        "requestBody": {
+          "x-name": "generalLookUp",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GeneralLookUpDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/generalLookUps/delete": {
+      "post": {
+        "tags": [
+          "GeneralLookUps"
+        ],
+        "operationId": "GeneralLookUps_Delete",
+        "parameters": [
+          {
+            "name": "uniqueId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/generalLookUps/retrieve": {
+      "post": {
+        "tags": [
+          "GeneralLookUps"
+        ],
+        "operationId": "GeneralLookUps_Retrieve",
+        "parameters": [
+          {
+            "name": "uniqueId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/generalLookUps/getByType": {
+      "get": {
+        "tags": [
+          "GeneralLookUps"
+        ],
+        "operationId": "GeneralLookUps_GetByType",
+        "parameters": [
+          {
+            "name": "generalLookUpType",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/KeyValue"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/users/getAll/{companyId}": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "Users_GetAllUsersByCompanyIdAndRoles",
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "role",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsersDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator",
+              "Super Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/users/create": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "Users_CreateUser",
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator",
+              "Super Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/users/update/{id}": {
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "Users_UpdateUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "companyId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "updatedUser",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 3
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator",
+              "Super Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/users/get/{id}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "Users_GetUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator",
+              "Super Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/users/updateRole": {
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "Users_UpdateUserRole",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "roleNames",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator",
+              "Super Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/roles/getAll/{companyId}": {
+      "get": {
+        "tags": [
+          "Roles"
+        ],
+        "operationId": "Roles_GetAllRolesByCompanyId",
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RolesDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator",
+              "Super Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/roles/get/{userId}": {
+      "get": {
+        "tags": [
+          "Roles"
+        ],
+        "operationId": "Roles_GetRolesByUserId",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator",
+              "Super Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/exams": {
+      "get": {
+        "tags": [
+          "Exams"
+        ],
+        "operationId": "Exams_GetAll",
+        "parameters": [
+          {
+            "name": "isActive",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "categoryGeneralLookUpId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "disciplineGeneralLookUpId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExamCollection"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/exams/{examId}": {
+      "get": {
+        "tags": [
+          "Exams"
+        ],
+        "operationId": "Exams_GetById",
+        "parameters": [
+          {
+            "name": "examId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExamDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/exams/activeCount": {
+      "get": {
+        "tags": [
+          "Exams"
+        ],
+        "operationId": "Exams_GetActiveExamCount",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActiveExamCount"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/exams/create": {
+      "post": {
+        "tags": [
+          "Exams"
+        ],
+        "operationId": "Exams_Create",
+        "requestBody": {
+          "x-name": "exam",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExamDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/exams/update/{examId}": {
+      "put": {
+        "tags": [
+          "Exams"
+        ],
+        "operationId": "Exams_Update",
+        "parameters": [
+          {
+            "name": "examId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExamDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/exams/export/{examId}": {
+      "get": {
+        "tags": [
+          "Exams"
+        ],
+        "operationId": "Exams_Export",
+        "parameters": [
+          {
+            "name": "examId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/exams/delete/{examId}": {
+      "delete": {
+        "tags": [
+          "Exams"
+        ],
+        "operationId": "Exams_Delete",
+        "parameters": [
+          {
+            "name": "examId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/exams/getAllFonts": {
+      "get": {
+        "tags": [
+          "Exams"
+        ],
+        "operationId": "Exams_GetAllFonts",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FontCollection"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/options/update/displayOrders/{questionId}": {
+      "put": {
+        "tags": [
+          "Options"
+        ],
+        "summary": "Update Options Display orders",
+        "description": "Update the Option Display orders with questionId.",
+        "operationId": "Options_UpdateDisplayOrders",
+        "parameters": [
+          {
+            "name": "questionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "displayOrders",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DisplayOrderDto"
+                }
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/options/delete/{optionId}": {
+      "delete": {
+        "tags": [
+          "Options"
+        ],
+        "summary": "Delete a Options",
+        "description": "Remove an exisiting Option with Id.",
+        "operationId": "Options_Delete",
+        "parameters": [
+          {
+            "name": "optionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/questions": {
+      "post": {
+        "tags": [
+          "Questions"
+        ],
+        "summary": "Create a new question",
+        "description": "Create a new Question under an exam.",
+        "operationId": "Questions_Create",
+        "requestBody": {
+          "x-name": "question",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuestionDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Questions"
+        ],
+        "summary": "Get all questions",
+        "description": "Get a list of Question with exam Id.",
+        "operationId": "Questions_GetAllByExamId",
+        "parameters": [
+          {
+            "name": "examId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuestionCollection"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/questions/multiple/{examId}": {
+      "post": {
+        "tags": [
+          "Questions"
+        ],
+        "summary": "Create a new question collection",
+        "description": "Add Question Collections under an exam.",
+        "operationId": "Questions_CreateMultiple",
+        "parameters": [
+          {
+            "name": "examId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "questionCollection",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuestionCollection"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/questions/{questionId}": {
+      "get": {
+        "tags": [
+          "Questions"
+        ],
+        "summary": "Get a question",
+        "description": "Get a Question with id.",
+        "operationId": "Questions_GetById",
+        "parameters": [
+          {
+            "name": "questionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuestionDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Questions"
+        ],
+        "summary": "Update a Question",
+        "description": "Update the Question with exam Id.",
+        "operationId": "Questions_Update",
+        "parameters": [
+          {
+            "name": "questionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "question",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuestionDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/questions/parent/{questionId}": {
+      "get": {
+        "tags": [
+          "Questions"
+        ],
+        "summary": "Get a List of question",
+        "description": "Get a List of Question with ParentQuestionId.",
+        "operationId": "Questions_GetChildQuestionsWithId",
+        "parameters": [
+          {
+            "name": "questionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/QuestionDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/questions/displayOrders/{examId}": {
+      "get": {
+        "tags": [
+          "Questions"
+        ],
+        "summary": "Get Display orders",
+        "description": "Get a list of Display orders with exam Id.",
+        "operationId": "Questions_GetDisplayOrders",
+        "parameters": [
+          {
+            "name": "examId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DisplayOrderDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/questions/largestDisplayOrder/{examId}": {
+      "get": {
+        "tags": [
+          "Questions"
+        ],
+        "summary": "Get Largest Display order",
+        "description": "Get the largest Display order from question list with exam Id.",
+        "operationId": "Questions_GetLargestDisplayOrder",
+        "parameters": [
+          {
+            "name": "examId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/questions/update/displayOrders/{examId}": {
+      "put": {
+        "tags": [
+          "Questions"
+        ],
+        "summary": "Update Questions Display orders",
+        "description": "Update the Question Display orders with exam Id.",
+        "operationId": "Questions_UpdateDisplayOrders",
+        "parameters": [
+          {
+            "name": "examId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "displayOrders",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DisplayOrderDto"
+                }
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/questions/delete/{questionId}": {
+      "delete": {
+        "tags": [
+          "Questions"
+        ],
+        "summary": "Delete a Question",
+        "description": "Delete an exisiting Question with Id.",
+        "operationId": "Questions_Delete",
+        "parameters": [
+          {
+            "name": "questionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Super Admin",
+              "Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/company/getAll": {
+      "get": {
+        "tags": [
+          "Company"
+        ],
+        "operationId": "Company_GetAll",
+        "parameters": [
+          {
+            "name": "isActive",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyCollectionDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator",
+              "Super Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/company/getById/{id}": {
+      "get": {
+        "tags": [
+          "Company"
+        ],
+        "operationId": "Company_GetById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator",
+              "Super Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/company/create": {
+      "post": {
+        "tags": [
+          "Company"
+        ],
+        "operationId": "Company_Create",
+        "requestBody": {
+          "x-name": "company",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompanyDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator",
+              "Super Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/company/update/{companyUniqueId}": {
+      "put": {
+        "tags": [
+          "Company"
+        ],
+        "operationId": "Company_Update",
+        "parameters": [
+          {
+            "name": "companyUniqueId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "company",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompanyDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator",
+              "Super Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/company/delete/{companyUniqueId}": {
+      "delete": {
+        "tags": [
+          "Company"
+        ],
+        "operationId": "Company_Delete",
+        "parameters": [
+          {
+            "name": "companyUniqueId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator",
+              "Super Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/company/getByUserId/{userUniqueId}": {
+      "get": {
+        "tags": [
+          "Company"
+        ],
+        "operationId": "Company_GetByUserId",
+        "parameters": [
+          {
+            "name": "userUniqueId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator",
+              "Super Admin"
+            ]
+          }
+        ]
+      }
+    },
+    "/account/login": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "Account_Login",
+        "requestBody": {
+          "x-name": "login",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/name": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "Account_GetCurrentUser",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "MediaDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "uniqueId": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "mediaType_GeneralLookUpID": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          }
+        }
+      },
+      "FileDetailDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "metaData": {
+            "$ref": "#/components/schemas/FileMetaData"
+          }
+        }
+      },
+      "FileMetaData": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "fileBytes": {
+            "type": "string",
+            "format": "byte"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "fileType": {
+            "type": "string"
+          },
+          "fileSize": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "MediaCollectionDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "questionOptionMediaDto": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MediaDto"
+            }
+          }
+        }
+      },
+      "FileDetailCollectionDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "questionOptionsFile": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileDetailDto"
+            }
+          }
+        }
+      },
+      "GeneralLookUpDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "uniqueId": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "default": ""
+          },
+          "value": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "displayOrder": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "createdUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "isArchive": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Result": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "succeeded": {
+            "type": "boolean"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "KeyValue": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "UsersDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserDto"
+            }
+          }
+        }
+      },
+      "UserDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "uniqueId": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "streetAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "postalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "RolesDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoleDto"
+            }
+          }
+        }
+      },
+      "RoleDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "uniqueId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "ExamCollection": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "exams": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExamDto"
+            }
+          }
+        }
+      },
+      "ExamDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "default": ""
+          },
+          "examDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "examDuration": {
+            "type": "string",
+            "format": "duration",
+            "nullable": true
+          },
+          "allowableAttempts": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "category_GeneralLookUpID": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "discipline_GeneralLookUpID": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "result_GeneralLookUpID": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "passingScore": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "markForReview": {
+            "type": "boolean",
+            "default": false
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "isArchive": {
+            "type": "boolean",
+            "default": false
+          },
+          "fontStyle": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "encryptExamLink": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "uniqueId": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "questionCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "media": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MediaDto"
+              }
+            ]
+          },
+          "category_GeneralLookUp": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GeneralLookUpDto"
+              }
+            ]
+          },
+          "discipline_GeneralLookUp": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GeneralLookUpDto"
+              }
+            ]
+          },
+          "result_GeneralLookUp": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GeneralLookUpDto"
+              }
+            ]
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuestionDto"
+            }
+          },
+          "examResultOptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExamResultOptionDto"
+            }
+          }
+        }
+      },
+      "QuestionDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "uniqueId": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "examUniqueId": {
+            "type": "string",
+            "nullable": true
+          },
+          "displayOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "questionLevelType_GeneralLookUpID": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "questionType_GeneralLookUpID": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "parentQuestionId": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "oldDisplayOrder": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OptionDto"
+            }
+          },
+          "media": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MediaDto"
+              }
+            ]
+          }
+        }
+      },
+      "OptionDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "uniqueId": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "displayOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "match": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "index": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "media": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MediaDto"
+              }
+            ]
+          },
+          "isInCorrectMatch": {
+            "type": "boolean",
+            "default": false
+          },
+          "isCorrect": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "ExamResultOptionDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "examResultOption_ExamID",
+          "optionName",
+          "minPercentage"
+        ],
+        "properties": {
+          "uniqueId": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "examResultOption_ExamID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "optionName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minPercentage": {
+            "type": "number",
+            "format": "double",
+            "default": ""
+          }
+        }
+      },
+      "ActiveExamCount": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "activeExams": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalExams": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "FontCollection": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "fonts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FontDto"
+            }
+          }
+        }
+      },
+      "FontDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "family": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "DisplayOrderDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "uniqueId": {
+            "type": "string"
+          },
+          "displayOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Unit": {
+        "type": "object",
+        "description": "Represents a void type, since Void is not a valid return type in C#.",
+        "additionalProperties": false
+      },
+      "QuestionCollection": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuestionDto"
+            }
+          }
+        }
+      },
+      "CompanyCollectionDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "companies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CompanyDto"
+            }
+          }
+        }
+      },
+      "CompanyDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "uniqueId": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "default": ""
+          },
+          "phoneNumber": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "supportContact": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "postalCode": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "default": "",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "media": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MediaDto"
+              }
+            ]
+          }
+        }
+      },
+      "ResultDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "succeeded": {
+            "type": "boolean"
+          },
+          "errors": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "userId": {
+            "type": "string",
+            "nullable": true
+          },
+          "token": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "LoginDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rememberMe": {
+            "title": "Remember me?",
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "JWT": {
+        "type": "apiKey",
+        "description": "Type into the textbox: Bearer {your JWT token}.",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "JWT": []
+    }
+  ]
+}

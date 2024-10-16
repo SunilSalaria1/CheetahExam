@@ -1,0 +1,94 @@
+﻿:root {
+    --bs-primary: #000000; /* change bootstrap primary color */
+}
+
+html, body {
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+body {
+    margin-bottom: 0px;
+    /*height: 100vh;*/
+}
+
+/*=== primary color classes ===*/
+.btn-primary {
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+}
+
+.text-primary {
+    color: var(--bs-primary) !important;
+}
+
+.identitypage-small .btn-primary {
+    background-image: linear-gradient(110deg, #673AB7 0%, #9575CD 70%);
+    border: none;
+}
+
+.identitypage-small a {
+    text-decoration: none;
+}
+
+
+.login-with-other {
+    position: absolute;
+    top: -12px;
+    background: white;
+}
+
+.button-mh-56 {
+    min-height: 56px !important;
+}
+
+.card-box-shadow {
+    box-shadow: 0 4px 20px #2f8fe812 !important;
+}
+
+.card-border-radius {
+    border-radius: 20px !important;
+}
+
+/*select box on registration form*/
+.custom-select {
+    appearance: auto;
+    height: 60%;
+}
+
+/*=== auth pages style css ===*/
+.curved-arrow {
+    transform: scaleX(1) rotate(330deg);
+    left: 25rem;
+}
+
+.login-alert ul {
+    margin-bottom: 0px;
+}
+
+.password-icon {
+    bottom: 13px;
+    right: 29px;
+}
+
+.profile-icon {
+    width: 2rem;
+    height: 2rem;
+    margin-left: -15px;
+}
+
+@media(min-width:992px) and (max-width:1199.99px) {
+    .curved-arrow {
+        transform: scaleX(1) rotate(330deg);
+        left: 17rem;
+        height: 100px;
+        z-index: 999;
+    }
+}
+
+@media(min-width:1200px) and (max-width:1600px) {
+    .curved-arrow {
+        transform: scaleX(1) rotate(330deg);
+        left: 20rem;
+        z-index: 999;
+    }
+}

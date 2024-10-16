@@ -1,0 +1,8 @@
+﻿@code {
+    [Inject] private NavigationManager _navigationManager { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        _navigationManager.NavigateTo("/authentication/login", true);
+    }
+}

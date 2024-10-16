@@ -1,0 +1,118 @@
+﻿<MudItem>
+	<b>Select Drag & Drop Style</b>
+    <MudForm>
+        <MudRadioGroup Value="UserChoose" ValueChanged="SelectedOption">
+            <MudCard>
+                <MudCardContent Class="px-0">
+
+                    <MudItem Class="row">
+                        <MudItem Class="d-flex align-items-center">
+                            <MudRadio Value="14" Class="me-0" Color="Color.Primary"></MudRadio>
+							<b>Drag & Drop Text</b>
+                        </MudItem>
+                    </MudItem>
+
+                    <MudItem Class="row">
+                        <span class="text-muted">  
+                            Sample Question
+                        </span>
+                    </MudItem>
+
+                    <MudItem Class="row mb-2">
+                        <MudText Class="fw-normal">  
+                            KPI stands for Key <input type="text" disabled="disabled" class="border" style="width : 90px;" /> Index
+                        </MudText>
+                    </MudItem>
+
+                    <MudItem Class="my-4 mx-3">
+						<MudItem class="border py-1 px-2 me-3 d-inline-block text-muted cursor-default">
+							<MudIcon Icon="@Icons.Material.Filled.DragIndicator"/>
+							<span>Product</span>
+						</MudItem>
+						<MudItem class="border py-1 px-2 me-3 d-inline-block text-muted cursor-default">
+							<MudIcon Icon="@Icons.Material.Filled.DragIndicator" />
+							<span>Performance</span>
+						</MudItem>
+						<MudItem class="border py-1 px-2 me-3 d-inline-block text-muted cursor-default">
+							<MudIcon Icon="@Icons.Material.Filled.DragIndicator" />
+							<span>Profits</span>
+						</MudItem>
+                    </MudItem>
+
+                </MudCardContent>
+            </MudCard>
+
+            <MudCard Class="mt-4">
+                <MudCardContent Class="px-0">
+
+                    <MudItem Class="row mb-2">
+                        <MudItem Class="d-flex align-items-center">
+                            <MudRadio Value="15" Class="me-0" Color="Color.Primary"></MudRadio>
+							<b>Drag & Drop Matching</b>
+                        </MudItem>
+                    </MudItem>
+
+                    <MudItem Class="row">
+						<span class="text-muted">Sample Question</span>
+                    </MudItem>
+
+                    <MudItem Class="row mb-2">
+							<b>Match the Country to the currency</b>
+                    </MudItem>
+
+                    <MudItem Class="row mt-3">
+                        <MudItem Class="col-5">
+                            Choice
+                        </MudItem>
+                        <MudItem Class="col-2">
+
+                        </MudItem>
+                        <MudItem Class="col-5">
+                            Possible Answers
+                        </MudItem>
+                    </MudItem>
+
+                    <MudItem Class="row">
+                        <MudItem Class="col-5">
+                            <MudTextField T="string" ReadOnly="true" Placeholder="Germany" Variant="Variant.Text">Germany</MudTextField>
+                        </MudItem>
+                        <MudItem Class="col-2" style="margin-top: 17px">
+                            <MudIconButton Disabled=true Icon="@Icons.Material.Filled.ArrowRightAlt"></MudIconButton>
+                        </MudItem>
+                        <MudItem Class="col-5">
+                            <MudTextField T="string" ReadOnly="true" Variant="Variant.Text"></MudTextField>
+                        </MudItem>
+                    </MudItem>
+
+                    <MudItem Class="row mb-4">
+                        <MudItem Class="col-5">
+                            <MudTextField T="string" ReadOnly="true" Placeholder="India" Variant="Variant.Text">India</MudTextField>
+                        </MudItem>
+                        <MudItem Class="col-2" style="margin-top: 17px">
+                            <MudIconButton Disabled=true Icon="@Icons.Material.Filled.ArrowRightAlt"></MudIconButton>
+                        </MudItem>
+                        <MudItem Class="col-5">
+                            <MudTextField T="string" ReadOnly="true" Variant="Variant.Text"></MudTextField>
+                        </MudItem>
+                    </MudItem>
+
+					<MudItem Class="my-4 mx-3">
+						<MudItem class="border py-1 px-2 me-3 d-inline-block text-muted cursor-default">
+							<MudIcon Icon="@Icons.Material.Filled.DragIndicator" />
+							<span>Yen</span>
+						</MudItem>
+						<MudItem class="border py-1 px-2 me-3 d-inline-block text-muted cursor-default">
+							<MudIcon Icon="@Icons.Material.Filled.DragIndicator" />
+							<span>Euro</span>
+						</MudItem>
+						<MudItem class="border py-1 px-2 me-3 d-inline-block text-muted cursor-default">
+							<MudIcon Icon="@Icons.Material.Filled.DragIndicator" />
+							<span>Rupee</span>
+						</MudItem>
+					</MudItem>
+
+                </MudCardContent>
+            </MudCard>
+        </MudRadioGroup>
+    </MudForm>
+</MudItem>

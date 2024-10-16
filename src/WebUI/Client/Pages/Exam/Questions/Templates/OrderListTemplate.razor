@@ -1,0 +1,21 @@
+﻿@using CheetahExam.WebUI.Shared.Common.Models.Exams
+
+<MudForm Model="@Question" @ref="@Form">
+
+    <MudItem Class="row">
+        <MudItem Class="col"><b>@Question.Name</b></MudItem>
+    </MudItem>
+
+    <MudDropContainer T="OptionDto" Items="@Question.Options" @ref="_container" ItemsSelector="@((item, dropzone) => true)" ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
+        <ChildContent>
+            <MudDropZone T="OptionDto" AllowReorder Identifier="Questions" Class="rounded mud-background-gray flex-grow-1">
+             </MudDropZone>
+         </ChildContent>
+         <ItemRenderer>
+             <MudListItem>
+                 <MudIcon Icon="@Icons.Material.Filled.DragIndicator" Size="Size.Small" /> @context.Name (@context.Index)
+             </MudListItem>
+        </ItemRenderer>
+    </MudDropContainer>
+
+ </MudForm>

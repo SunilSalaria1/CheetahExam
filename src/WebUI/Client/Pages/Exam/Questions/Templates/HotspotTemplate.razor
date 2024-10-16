@@ -1,0 +1,27 @@
+﻿<MudForm Model="Model" Form="Form">
+
+    <MudItem Class="row">
+        <MudItem Class="col"><b>Hotspot</b></MudItem>
+    </MudItem>
+
+    <MudItem Class="row">
+        <span>SampleQuestion</span>
+    </MudItem>
+
+    <MudItem Class="row mt-2">
+        <span>@Model.Name</span>
+    </MudItem>
+
+    <MudItem Class="row mt-2">
+        <MudImage Src="@(Model.Media is null ? "https://cdn.britannica.com/98/152298-050-8E45510A/Cheetah.jpg" : Model.Media.Url)"></MudImage>
+    </MudItem>
+
+    <MudItem Class="row">
+        <MudItem Class="col d-flex justify-content-end">
+            <MudItem Class="row">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" Disabled="true">Submit</MudButton>
+            </MudItem>
+        </MudItem>
+    </MudItem>
+
+</MudForm>

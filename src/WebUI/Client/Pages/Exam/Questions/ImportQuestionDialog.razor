@@ -1,0 +1,89 @@
+﻿@using CheetahExam.WebUI.Shared.Common.Models.Exams
+@using static CheetahExam.WebUI.Shared.Constants.Constant
+
+<MudDialog ClassContent="py-4" ClassActions="px-6 pb-4 pt-0">
+    <DialogContent>
+		<MudText Typo="Typo.h6" GutterBottom="true">@(string.IsNullOrWhiteSpace(ExamId) ? "Import Exam" : "Import Questions")</MudText>
+        <MudDivider DividerType="DividerType.FullWidth" Class="fw-bolder" Light=false />
+
+        @* <-------------Import Exam---------------> *@
+        @if (string.IsNullOrWhiteSpace(ExamId))
+        {
+            <MudItem>
+                <MudItem Class="d-flex align-items-center">
+                    <MudText Class="py-2">Download Sample Excel</MudText>
+                    <a href="@FileDirectory.SampleExcel">
+						<MudIconButton Icon="@Icons.Material.Filled.CloudDownload" aria-label="download Excel" Class="py-0 mb-1" />
+                    </a>
+                </MudItem>
+
+				<MudItem Class="d-flex align-items-center">
+                    <MudText Class="py-2">Import questions from Excel</MudText>
+                    <MudIconButton HtmlTag="label" for="formFile" Icon="@Icons.Material.Filled.CloudUpload" aria-label="upload Excel" Class="py-0 mb-1" />
+                    <InputFile id="formFile" OnChange="ImportExam" Accept=".xlxs" hidden />
+                    <span>@(SelectedFileName)</span>
+                </MudItem>
+            </MudItem>
+        }
+        @* <-------------Import Questions---------------> *@
+        else
+        {
+            <MudItem>
+                <MudText Class="py-2">Import questions from existing Exams</MudText>
+
+                @if (IsExamSelected)
+                {
+                    if (!Questions.Any())
+                    {
+                        <MudText Typo="Typo.h5">
+                            There are no Questions in this Exam.
+                        </MudText>
+                    }
+                    else
+                    {
+                        <MudDataGrid Class="mt-2 mud-table" T="QuestionDto" Height="400px" MultiSelection="true" Items="@Questions" SelectedItemsChanged="@((HashSet<QuestionDto> questions) => SelectedItemsChanged(questions))">
+							<Columns>
+								<SelectColumn T="QuestionDto" />
+                                <PropertyColumn Property="x => x.Name" Title="Questions" />
+                            </Columns>
+                        </MudDataGrid>
+                    }
+                }
+                else
+                {
+                    <MudSelect T="string" ValueChanged="@((string x) => HandleExamChange(x))" Clearable="true" Variant="Variant.Text" Label="Exams" AnchorOrigin="Origin.BottomCenter">
+                        @foreach (var exam in Exams)
+                        {
+                            <MudSelectItem Value="@($"{exam.Name} ({exam.QuestionCount} questions)")" />
+                        }
+                    </MudSelect>
+                }
+            </MudItem>
+        }
+
+
+
+
+    </DialogContent>
+    <DialogActions>
+		@if (IsExamSelected)
+		{
+			<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@Back" Class="d-flex align-items-center me-auto">
+				<MudIcon Icon="@Icons.Material.Filled.ArrowBack" Class="me-2 fs-5" />
+				<span class="text-capitalize">Back</span>
+			</MudButton>
+		}
+        <MudButton Variant="Variant.Filled" OnClick="@Cancel" Class="fs-6 me-3 text-capitalize d-flex align-items-center">
+            <MudIcon Icon="@Icons.Material.Filled.Cancel" Color="Color.Dark" Class="me-2 fs-5"/>
+            <span>Cancel</span>
+        </MudButton>
+
+        @if (ImportedFile is not null || SelectedQuestions.Any())
+        {
+			<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => Import())" Class="fs-6 text-capitalize d-flex align-items-center ms-0">
+                <MudIcon Icon="@Icons.Material.Filled.ImportExport"/>
+                <span>Import</span>
+            </MudButton>
+        }
+        </DialogActions>
+</MudDialog>

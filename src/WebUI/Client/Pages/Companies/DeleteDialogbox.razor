@@ -1,0 +1,9 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudText>Do you really want to @((DialogType == "Delete") ? "Delete" : "Retrive") this record ?</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color=@((DialogType == "Delete")?@Color.Error:Color.Warning) Variant="Variant.Filled" OnClick="Submit">@((DialogType == "Delete") ? "Delete" : "Retrive")</MudButton>
+    </DialogActions>
+</MudDialog>

@@ -1,0 +1,108 @@
+﻿@page "/companies/edit"
+@page "/companies/{CompanyId}/edit"
+
+<MudText Typo="Typo.h6" GutterBottom="true">@(!string.IsNullOrEmpty(CompanyId) ? $"Edit {Company.Name}" : "Add Company")</MudText>
+<MudDivider DividerType="DividerType.FullWidth" Class="fw-bolder" Light=false />
+<MudForm Model="@Company" @ref="@Form" ValidationDelay="0">
+    <MudCardContent Class="p-0">
+        <MudItem Class="row">
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudTextField @bind-Value="Company.Name"
+                              For="@(() => Company.Name)"
+                              Immediate="true"
+                              Label="Name"
+                              Required="true"
+                              MaxLength="100" />
+            </MudItem>
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudTextField @bind-Value="Company.PhoneNumber"
+                              For="@(() => Company.PhoneNumber)"
+                              Immediate="true"
+                              Label="Phone Number" />
+            </MudItem>
+        </MudItem>
+
+        <MudItem Class="row">
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudTextField @bind-Value="Company.SupportContact"
+                              For="@(() => Company.SupportContact)"
+                              Immediate="true"
+                              Label="Support Contact" />
+            </MudItem>
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudTextField @bind-Value="Company.Address"
+                              For="@(() => Company.Address)"
+                              Immediate="true"
+                              Label="Address" />
+            </MudItem>
+        </MudItem>
+
+        <MudItem Class="row">
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudTextField @bind-Value="Company.City"
+                              For="@(() => Company.City)"
+                              Immediate="true"
+                              Label="City" />
+            </MudItem>
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudTextField @bind-Value="Company.State"
+                              For="@(() => Company.State)"
+                              Immediate="true"
+                              Label="State" />
+            </MudItem>
+        </MudItem>
+
+        <MudItem Class="row">
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudTextField @bind-Value="Company.Country"
+                              For="@(() => Company.Country)"
+                              Immediate="true"
+                              Label="Country" />
+            </MudItem>
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudTextField @bind-Value="Company.PostalCode"
+                              For="@(() => Company.PostalCode)"
+                              Immediate="true"
+                              Label="Postal Code" />
+            </MudItem>
+        </MudItem>
+
+        <MudItem Class="row d-flex justify-content-end mx-auto">
+            <MudItem Class="col-md-4 col-sm-12 col-1 mt-4 align-items-center justify-content-start d-flex">
+                <MudButton HtmlTag="label"
+                           Variant="Variant.Filled"
+                           for="formFile"
+                           Color="Color.Default"
+                           StartIcon="@Icons.Material.Filled.Image"
+                           Size="Size.Small">Upload Image</MudButton>
+                @if (SelectedImage != null)
+                {
+                    <MudText Typo="Typo.caption">@SelectedImage</MudText>
+                    <MudIconButton Icon="@Icons.Material.Outlined.Close" Size=Size.Small OnClick="ClearImage" Class="mx-1"></MudIconButton>
+                }
+            </MudItem>
+            <MudItem Class="col-md-2 col-sm-12 col-12 justify-content-end d-flex">
+                <MudSwitch Class="mt-4" For="@(() => Company.ISActive)" Label="Active" @bind-Value="Company.ISActive" Color="Color.Primary" />
+            </MudItem>
+        </MudItem>
+
+    </MudCardContent>
+</MudForm>
+<InputFile id="formFile" OnChange="UploadImage" Accept=".png, .jpg" hidden />
+
+<div class="d-flex justify-content-end mt-4 p-3 mx-auto">
+    <MudButton OnClick="@Back" Class="text-capitalize me-1 fs-6" style="display: flex; align-items: center;"
+               Size=Size.Medium Variant="Variant.Filled">
+        <MudIcon Icon="@Icons.Material.Filled.Cancel" Color="Color.Dark" style="margin-right: 8px; font-size:20px" />
+        <span>
+            Cancel
+        </span>
+    </MudButton>
+    <MudButton OnClick="@(async () => await Submit())" Class="text-capitalize fs-6 ms-2" style="margin-left: 10px; display: flex; align-items: center;"
+               Size=Size.Medium Variant="Variant.Filled" Color="Color.Primary">
+        <MudIcon Icon="@Icons.Material.Filled.AddCircle" style="margin-right: 8px; font-size:20px" />
+        <span>
+            @(!string.IsNullOrEmpty(CompanyId) ? "Edit" : "Add")
+        </span>
+    </MudButton>
+</div>

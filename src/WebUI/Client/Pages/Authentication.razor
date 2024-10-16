@@ -1,0 +1,30 @@
+﻿@* @page "/authentication/{action}"
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+<RemoteAuthenticatorView Action="@Action">
+    <LogOutSucceeded> *@
+        @* <RedirectToHome /> *@
+    @* </LogOutSucceeded>
+    <LoggingIn>
+        <LoadingIndicator IsLoading=true />
+    </LoggingIn>
+    <CompletingLoggingIn>
+        <LoadingIndicator IsLoading=true />
+    </CompletingLoggingIn>
+    <LogOut>
+        <LoadingIndicator IsLoading=true />
+    </LogOut>
+    <CompletingLogOut>
+        <LoadingIndicator IsLoading=true />
+    </CompletingLogOut>
+    <Registering>
+        <LoadingIndicator IsLoading=true />
+    </Registering>
+    <UserProfile>
+        <LoadingIndicator IsLoading=true />
+    </UserProfile>
+</RemoteAuthenticatorView> *@
+
+
+@code{
+    [Parameter] public string? Action { get; set; }
+}

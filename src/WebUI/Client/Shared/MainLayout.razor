@@ -1,0 +1,62 @@
+﻿@using Blazored.LocalStorage
+@using CheetahExam.WebUI.Client.Pages
+@inherits LayoutComponentBase
+
+<MudThemeProvider Theme="CustomTheme" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar>
+        <AuthorizeView>
+            <Authorized>
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+            </Authorized>
+        </AuthorizeView>
+        <MudLink Class="d-none d-sm-block" Color="Color.Inherit" Underline="Underline.None" Href="/"><img src="/images/logo-white.png" alt="logo" class="mud-image object-fill object-center" height="50"></MudLink>
+        <MudItem Class="ms-auto">
+            <LoginDisplay />
+        </MudItem>
+    </MudAppBar>
+
+    <AuthorizeView>
+        <Authorized>
+            <MudDrawer @bind-Open="@_drawerOpen" Class="overflow-hidden">
+                <NavMenu />
+            </MudDrawer>
+        </Authorized>
+    </AuthorizeView>
+
+    <MudMainContent>
+        <section class="p-4">
+            <ErrorBoundary>
+                <ChildContent>
+                    @Body
+                </ChildContent>
+                <ErrorContent>
+                    <SometingWentWrong />
+                </ErrorContent>
+            </ErrorBoundary>
+        </section>
+    </MudMainContent>
+</MudLayout>
+
+
+@code {
+    string country = "Primary";
+    bool _drawerOpen = true;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    MudTheme CustomTheme = new MudTheme()
+        {
+            Palette = new PaletteLight()
+            {
+                Primary = "#000000", /* change primary color; default: black */
+                AppbarBackground = "#000000",/* change navbar color; default: black */
+            },
+        };
+}

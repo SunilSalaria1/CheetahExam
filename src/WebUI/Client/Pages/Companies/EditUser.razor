@@ -1,0 +1,107 @@
+﻿@page "/companies/{CompanyId}/edituser/{UserId?}"
+
+@using CheetahExam.WebUI.Shared.Common
+@using FluentValidation
+
+<MudText Typo="Typo.h6" GutterBottom="true">@(!string.IsNullOrEmpty(UserId) ? $"Edit {UserName}" : "Add New User")</MudText>
+<MudDivider DividerType="DividerType.FullWidth" Class="fw-bolder" Light=false />
+<MudForm Model="@User" @ref="@Form" ValidationDelay="0">
+    <MudCardContent Class="p-0">
+        <MudItem Class="row">
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudTextField @bind-Value="User.FirstName"
+                              For="@(() => User.FirstName)"
+                              Immediate="true"
+                              Label="First Name"
+                              Required="true"
+                              MaxLength="100" />
+            </MudItem>
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudTextField @bind-Value="User.LastName"
+                              For="@(() => User.LastName)"
+                              Immediate="true"
+                              Label="Last Name" />
+            </MudItem>
+        </MudItem>
+
+        <MudItem Class="row">
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudTextField @bind-Value="User.Email"
+                              For="@(() => User.Email)"
+                              Immediate="true"
+                              Label="Email"
+                              Required="true" />
+            </MudItem>
+
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudTextField @bind-Value="User.PhoneNumber"
+                              For="@(() => User.PhoneNumber)"
+                              Immediate="true"
+                              Label="Phone Number" />
+            </MudItem>
+        </MudItem>
+
+        <MudItem Class="row">
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudTextField @bind-Value="User.StreetAddress"
+                              For="@(() => User.StreetAddress)"
+                              Immediate="true"
+                              Label="Street Address" />
+            </MudItem>
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudTextField @bind-Value="User.City"
+                              For="@(() => User.City)"
+                              Immediate="true"
+                              Label="City" />
+            </MudItem>
+        </MudItem>
+
+        <MudItem Class="row">
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudTextField @bind-Value="User.State"
+                              For="@(() => User.State)"
+                              Immediate="true"
+                              Label="State" />
+            </MudItem>
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudTextField @bind-Value="User.PostalCode"
+                              For="@(() => User.PostalCode)"
+                              Immediate="true"
+                              Label="Postal Code" />
+            </MudItem>
+        </MudItem>
+
+        <MudItem Class="row">
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudSelect T="string" MultiSelection="true" SelectAll="true" SelectAllText="Select all Roles" AdornmentIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                           MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))" @bind-SelectedValues="Options"
+                           Margin="Margin.Dense" Label="Selected Role" Variant="Variant.Text" Required="true" AnchorOrigin="Origin.BottomCenter">
+                    @foreach (var role in Roles)
+                    {
+                        <MudSelectItem Value="role.Name">@role.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem Class="col-md-6 col-sm-12 col-12 d-flex justify-content-end">
+                <MudSwitch Class="mt-4" For="@(() => User.ISActive)" Label="Active" @bind-Value="User.ISActive" Color="Color.Primary" />
+            </MudItem>
+        </MudItem>
+    </MudCardContent>
+</MudForm>
+
+<div class="d-flex justify-content-end mt-4 p-3 mx-auto">
+    <MudButton OnClick="@Back" Class="text-capitalize" style="display: flex; align-items: center;"
+               Size=Size.Medium Variant="Variant.Filled">
+        <MudIcon Icon="@Icons.Material.Filled.Cancel" Color="Color.Dark" style="margin-right: 8px; font-size:20px" />
+        <span>
+            Cancel
+        </span>
+    </MudButton>
+    <MudButton OnClick="@(async () => await Submit())" style="margin-left: 10px; display: flex; align-items: center;" Class="text-capitalize fs-6 ms-2"
+               Size=Size.Medium Variant="Variant.Filled" Color="Color.Primary">
+        <MudIcon Icon="@Icons.Material.Filled.AddCircle" style="margin-right: 8px; font-size:20px" />
+        <span>
+            @(!string.IsNullOrEmpty(UserId) ? "Edit" : "Add")
+        </span>
+    </MudButton>
+</div>

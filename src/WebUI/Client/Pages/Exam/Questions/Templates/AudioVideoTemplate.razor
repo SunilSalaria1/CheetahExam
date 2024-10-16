@@ -1,0 +1,27 @@
+﻿<MudForm Model="Model" Form="Form">
+
+    <MudItem Class="row">
+        <MudItem Class="col"><b>Upload Audio/Video</b></MudItem>
+    </MudItem>
+
+    <MudItem Class="row">
+        <span>@Model.Name</span>
+    </MudItem>
+
+    <MudItem Class="row mt-2">
+        <iframe width="560" height="315"
+                src="https://www.youtube.com/embed/VKCDDjXgYUs?si=1e4wFFWJRKRZI_re" title="YouTube video player"
+                frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+        </iframe>
+    </MudItem>
+
+    <MudItem Class="row">
+        <MudItem Class="col d-flex justify-content-end">
+            <MudItem Class="row">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" Disabled="true">Submit</MudButton>
+            </MudItem>
+        </MudItem>
+    </MudItem>
+
+</MudForm>

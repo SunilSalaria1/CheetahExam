@@ -1,0 +1,47 @@
+﻿@using CheetahExam.WebUI.Shared.Common.Models
+@using CheetahExam.WebUI.Shared.Common.Models.GeneralLookUps
+@using FluentValidation
+@using System.Text.RegularExpressions
+
+<MudDialog ClassContent="py-4" ClassActions="px-6 pb-4 pt-0">
+    <DialogContent>
+        <MudText Typo="Typo.h6" GutterBottom="true">
+            @(ISCreate ? "Add" : "Edit") @ExtractHeader(@GeneralLookUp.Type.Replace("_", " "))
+        </MudText>
+        <MudDivider DividerType="DividerType.FullWidth" Class="fw-bolder" Light=false />
+        <MudForm Model="@GeneralLookUp" @ref="@Form" Validation="@(GeneralLookUpsFluentValidation.ValidateValue)" ValidationDelay="0">
+            <MudCardContent Class="p-0">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 col-12">
+                        <MudTextField @bind-Value="GeneralLookUp.Value"
+                                      For="@(() => GeneralLookUp.Value)"
+                                      Immediate="true"
+                                      Label="Name" />
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-12">
+                        <MudNumericField @bind-Value="GeneralLookUp.DisplayOrder"
+                                         For="@(() => GeneralLookUp.DisplayOrder)"
+                                         Immediate="true"
+                                         Label="Display Order" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 col-12">
+                        <MudTextField T="string" Label="Description" Variant="Variant.Text" @bind-Value="GeneralLookUp.Description"
+                                      For="@(() => GeneralLookUp.Description)" Immediate="true" Lines="3" />
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-12">
+                        <MudSwitch Class="mt-5" @bind-Value="GeneralLookUp.ISActive" For="@(() => GeneralLookUp.ISActive)" Color="Color.Primary">Active</MudSwitch>
+                    </div>
+                </div>
+            </MudCardContent>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="@Cancel" Class="text-capitalize me-1 fs-6" StartIcon="@Icons.Material.Filled.Cancel"
+                   Size=Size.Medium Variant="Variant.Filled">Cancel</MudButton>
+
+        <MudButton OnClick="@(async () => await Submit())" Class="text-capitalize fs-6" StartIcon="@Icons.Material.Filled.Save"
+                   Size=Size.Medium Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+    </DialogActions>
+</MudDialog>

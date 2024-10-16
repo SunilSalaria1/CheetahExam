@@ -1,0 +1,39 @@
+﻿@page "/"
+@using CheetahExam.WebUI.Client.Services
+@using CheetahExam.WebUI.Shared.Constants
+
+@code {
+
+    [Inject] CustomAuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
+
+    [Inject] private NavigationManager _navigationManager { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        if (!authState.User.Identity!.IsAuthenticated)
+        {
+            _navigationManager.NavigateTo("/authentication/login");
+        }
+        else
+        {
+            if (authState.User.IsInRole(Constant.UserRoles.Administrator))
+            {
+                _navigationManager.NavigateTo("/companies");
+            }
+            else if (authState.User.IsInRole(Constant.UserRoles.SuperAdmin))
+            {
+                _navigationManager.NavigateTo("/users");
+            }
+            else if (authState.User.IsInRole(Constant.UserRoles.Admin))
+            {
+                _navigationManager.NavigateTo("/exams");
+            }
+            else
+            {
+                _navigationManager.NavigateTo("/dashboard");
+            }
+        }
+    }
+}

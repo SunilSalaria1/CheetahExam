@@ -1,0 +1,41 @@
+﻿@using CheetahExam.WebUI.Client.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager Navigation
+
+<AuthorizeView>
+    <Authorized>
+        <MudMenu Icon="@Icons.Material.Filled.AccountCircle" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomRight" Color="Color.Inherit" id="account">
+            <MudMenuItem Href="/authentication/profile" Class="border-b border-solid mud-border-Dark">
+                <MudIcon Icon="@Icons.Material.Filled.PermIdentity" Size="Size.Small" />
+                @context.User.Identity?.Name
+            </MudMenuItem>
+            <MudMenuItem OnClick="@(() => BeginLogOut(context))">
+                <MudIcon Icon="@Icons.Material.Filled.Logout" Size="Size.Small" />
+                @(string.IsNullOrWhiteSpace(context.User.Claims.FirstOrDefault(c => c.Type == "claims/customclaim/currentUserId")?.Value) ? "Log out" : "Exit")
+            </MudMenuItem>
+        </MudMenu>
+    </Authorized>
+    <NotAuthorized>
+        <MudButton Variant="Variant.Filled" Href="/authentication/registration" Class="me-2 bg-white text-capitalize" Style="color:#594ae2;" Disabled="true">
+            <strong>Sign up</strong>
+        </MudButton>
+
+        <MudButton Variant="Variant.Filled" Href="/authentication/login" Class="bg-white text-capitalize" Style="color:#594ae2;">
+            <strong>Sign In</strong>
+        </MudButton>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    [Inject] NavigationManager NavigationManager { get; set; } = null!;
+
+    [Inject] CustomAuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
+
+    private async Task BeginLogOut(AuthenticationState authState)
+    {
+        await AuthenticationStateProvider.SetLogoutStateAsync(authState);
+
+        NavigationManager.NavigateTo("/authentication/login");
+    }
+}

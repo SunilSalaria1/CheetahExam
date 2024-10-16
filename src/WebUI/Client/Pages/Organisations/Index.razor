@@ -1,0 +1,17 @@
+﻿@page "/organisations"
+
+<FlexibleAuthorizeView Permissions="@Permissions.SuperAdmin">
+
+    <MudDataGrid Class="p-2" Elevation="4" T="OrganisationDto" Items="@Items" SortMode="SortMode.Multiple"
+                 Hover="true" Dense="true" Filterable="true" Bordered="true" Hideable="true" >
+        <Columns>
+            <PropertyColumn Property="x => x.Name" Title="Name" Sortable="true" Filterable="false" />
+            <PropertyColumn Property="x => x.ContactNumber" Title="IsActive" Sortable="true" Filterable="false" />
+            <PropertyColumn Property="x => x.Email" Title="Display Order" Sortable="true" Filterable="false" />
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="OrganisationDto" />
+        </PagerContent>
+    </MudDataGrid>
+
+</FlexibleAuthorizeView>

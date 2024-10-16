@@ -1,0 +1,113 @@
+﻿@page "/authentication/registration"
+@attribute [AllowAnonymous]
+
+@using CheetahExam.WebUI.Client.Services
+@using CheetahExam.WebUI.Shared.Common.Models.Accounts
+@using Microsoft.AspNetCore.Authorization
+
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-6 col-xl-5 min-vh-100 d-none bg-light shadow-sm d-lg-flex align-items-center justify-content-center flex-column px-5">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="fw-bold">Welcome to our community</h1>
+                    <p class="my-4">
+                        Cheetah Learning was the first company to offer Accelerated PMP Exam Prep over 20 years ago. We have a consistent 98% pass rate and 95% of our business is referrals from our large and very successful alumni base. Cheetah Learning students and the companies they serve become the top performers in their industries. We offer PMP, PMI-ACP, CAPM, and CCPM prep courses as well as continuing education classes in a variety of project management, negotiations, and accelerated learning topics.
+                    </p>
+                </div>
+            </div>
+            <!-- profile stories -->
+            <div class="row d-flex align-items-center justify-content-center">
+                <div class="col-12 d-flex align-items-center justify-content-center my-xl-0">
+                    <div class="profile-icon border border-2 border-dark rounded-circle shadow-sm">
+                        <img src="/images/profile-1.png" alt="profile" width="100%"
+                             height="100%" class="rounded-circle">
+                    </div>
+                    <div class="profile-icon border border-2 border-dark rounded-circle shadow-sm">
+                        <img src="/images/profile-2.png" alt="profile" width="100%"
+                             height="100%" class="rounded-circle">
+                    </div>
+                    <div class="profile-icon border border-2 border-dark rounded-circle shadow-sm">
+                        <img src="/images/profile-3.png" alt="profile" width="100%"
+                             height="100%" class="rounded-circle">
+                    </div>
+                    <div class="profile-icon border border-2 border-dark rounded-circle shadow-sm">
+                        <img src="/images/profile-1.png" alt="profile" width="100%"
+                             height="100%" class="rounded-circle">
+                    </div>
+                </div>
+                <div class="col-12 p-0 text-center mt-2">
+                    <div class="small">
+                        4k+ users have joined us, now it's your turn.
+                    </div>
+                </div>
+            </div>
+            <!-- /profile stories -->
+            <!-- curved arrow icon -->
+            <img src="/images/curved-arrow.png" class="curved-arrow position-relative"
+                 alt="arrow">
+            <!-- /curved arrow icon -->
+        </div>
+        <div class="col-12 col-lg-6 col-xl-7 align-items-center d-flex col-md-12 min-vh-100 ">
+            <div class="row d-flex justify-content-center">
+                <div class="col-12 col-md-12 col-lg-10 col-xl-7">
+                    <div class="card p-4 border-0">
+                        <div class="card-header bg-transparent text-center mb-5 p-0 border-0">
+                            <img src="/images/logo.png" alt="logo" height="75">
+                        </div>
+                        <div class="card-body p-0">
+                            <MudForm Model="@Input" @ref="@Form">
+                                <div class="row">
+                                    <div class="form-group mb-3">
+                                        <MudTextField @bind-Value="Input.FirstName"
+                                                      For="@(() => Input.FirstName)"
+                                                      Immediate="true"
+                                                      Label="First Name" class="form-control form-control-lg shadow-sm" />
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <MudTextField @bind-Value="Input.LastName"
+                                                      For="@(() => Input.LastName)"
+                                                      Immediate="true"
+                                                      Label="Last Name" class="form-control form-control-lg shadow-sm" />
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <MudTextField @bind-Value="Input.Email"
+                                                      For="@(() => Input.Email)"
+                                                      Immediate="true"
+                                                      Label="Email" class="form-control form-control-lg shadow-sm" />
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <MudDatePicker @bind-Date="Input.DateOfBirth"
+                                                       For="@(() => Input.DateOfBirth)"
+                                                       Immediate="true"
+                                                       Label="Date of Birth" class="form-control form-control-lg shadow-sm" />
+                                    </div>
+                                    <div class="form-group mb-3 position-relative">
+                                        <MudTextField @bind-Value="Input.Password"
+                                                      InputType="InputType.Password"
+                                                      For="@(() => Input.Password)"
+                                                      Immediate="true"
+                                                      Label="Password" class="form-control form-control-lg shadow-sm" />
+                                    </div>
+                                    <div class="form-group mb-3 position-relative">
+                                        <MudTextField @bind-Value="Input.ConfirmPassword"
+                                                      InputType="InputType.Password"
+                                                      For="@(() => Input.ConfirmPassword)"
+                                                      Immediate="true"
+                                                      Label="Confirm Password" class="form-control form-control-lg shadow-sm" />
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <MudButton class="btn btn-primary px-4 py-3 w-100 shadow-sm" OnClick="@(async () => await Submit())" Variant="Variant.Filled" Color="Color.Primary">Sign Up</MudButton>
+                                    </div>
+                                    <div class="col-12 mb-2 text-center">
+                                        <span>Already have an account?</span> <MudLink id="login-redirect" class="text-primary" Href="/authentication/login">Sign In</MudLink>
+                                    </div>
+                                </div>
+                            </MudForm>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,132 @@
+@page "/exam/{ExamId?}"
+@using CheetahExam.WebUI.Shared.Constants
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = Constant.UserRoles.Admin)]
+
+@using static CheetahExam.WebUI.Shared.Constants.Constant
+
+<MudText Typo="Typo.h6" GutterBottom="true">@(!string.IsNullOrEmpty(ExamId) ? $"Edit {model.Name}" : "Add Exam")</MudText>
+<MudDivider DividerType="DividerType.FullWidth" Class="fw-bolder" Light=false />
+
+<MudForm Model="@model" @ref="@form" ValidationDelay="0">
+    <MudCardContent Class="p-0">
+        <MudItem Class="row">
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudTextField @bind-Value="model.Name" For="@(() => model.Name)" Immediate="true" Label="Exam Title" Required="true" MaxLength="100" />
+            </MudItem>
+
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudDatePicker For="@(() => model.ExamDate)" Label="Exam Date" @bind-Date="model.ExamDate" Required="true"
+                               IsDateDisabledFunc="@((DateTime dt) => dt.Date < DateTime.Now.Date)" AdditionalDateClassesFunc="@((DateTime dt) => ((int)dt.DayOfWeek == 0 ? "red-text text-accent-4" : ""))" />
+            </MudItem>
+        </MudItem>
+
+        <MudItem Class="row">
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudNumericField Label="Max Attempts" Variant="Variant.Text" Min="0" Max="50" @bind-Value="model.AllowableAttempts" />
+            </MudItem>
+
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudTimePicker Label="Duration Minutes" @bind-Time="model.ExamDuration" />
+            </MudItem>
+        </MudItem>
+
+        <MudItem Class="row">
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudSelect T="string" ValueChanged="@((string x) => HandleCategoryValueChanged(x))" Value="@SelectedCategory" Clearable="true" Variant="Variant.Text" Label="Category" AnchorOrigin="Origin.BottomCenter">
+                    @foreach (var categoryItem in CategoryItems)
+                    {
+                        <MudSelectItem Value="categoryItem.Key.ToString()" Disabled="false">@categoryItem.Value</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudSelect T="string" ValueChanged="@((string x) => HandleDisciplineValueChanged(x))" Value="@SelectedDiscipline" Clearable="true" Variant="Variant.Text" Label="Discipline" AnchorOrigin="Origin.BottomCenter">
+                    @foreach (var disciplineItem in DisciplineItems)
+                    {
+                        <MudSelectItem Value="disciplineItem.Key.ToString()" Disabled="false">@disciplineItem.Value</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+        </MudItem>
+
+        <MudItem Class="row">
+            @if (!string.IsNullOrWhiteSpace(ExamId))
+            {
+                <MudItem Class="col-md-6 col-sm-12 col-12">
+                    <MudTextField @bind-Value="model.UniqueId" For="@(() => model.UniqueId)" Immediate="true" Label="Encrypt Exam Link" Disabled="true" />
+                </MudItem>
+            }
+
+            <MudItem Class="col-md-6 col-sm-12 col-12">
+                <MudSelect T="string" ValueChanged="@((string x) => HandleFontFamilyChanged(x))" Value="@SelectedFont" Clearable="true" Variant="Variant.Text" Label="Font Family" AnchorOrigin="Origin.BottomCenter">
+                    @foreach (var font in FontItems)
+                    {
+                        <MudSelectItem Value="font.Key.ToString()" Disabled="false"><div style="font-family: @font.Value;">@font.Value</div></MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+        </MudItem>
+
+        <MudItem Class="row">
+            <MudItem Class="col-md-4 col-sm-12 col-12">
+                <MudSelect T="string" ValueChanged="@((string x) => HandleResultTypeChanged(x))" Value="@SelectedResultType" Clearable="true" Variant="Variant.Text" Label="Result Type" AnchorOrigin="Origin.BottomCenter">
+                    @foreach (var resultItem in ExamResultItems)
+                    {
+                        <MudSelectItem Value="resultItem.Key.ToString()" Disabled="false">@resultItem.Value</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+
+            <MudItem Class="col-md-4 col-sm-12 col-12 mt-4 align-items-center justify-content-start d-flex">
+                <MudButton HtmlTag="label" Variant="Variant.Filled" for="formFile" Color="Color.Default" StartIcon="@Icons.Material.Filled.Image" Size="Size.Small">Upload Image</MudButton>
+                @if (SelectedImage != null)
+                {
+                    <MudText Typo="Typo.caption">@SelectedImage</MudText>
+                    <MudIconButton Icon="@Icons.Material.Outlined.Close" Size=Size.Small OnClick="ClearImage" Class="mx-1"></MudIconButton>
+                }
+            </MudItem>
+
+            <MudItem Class="col-md-2 col-sm-12 col-12 justify-content-end d-flex">
+                <MudSwitch Class="mt-4" For="@(() => model.ISActive)" Label="Active" @bind-Value="model.ISActive" Color="Color.Primary" />
+            </MudItem>
+
+            <MudItem Class="col-md-2 col-sm-12 col-12 justify-content-end d-flex">
+                <MudSwitch Class="mt-4" For="@(() => model.MarkForReview)" Label="Mark for review" @bind-Value="model.MarkForReview" Color="Color.Primary" />
+            </MudItem>
+        </MudItem>
+
+        <MudItem Class="row">
+            @if (ResultTypeValue == ResultType.PassFail)
+            {
+                <MudItem Class="col-md-6 col-sm-12 col-12">
+                    <MudNumericField Label="Passing Grade" Variant="Variant.Text" Min="0.0" @bind-Value="model.PassingScore" />
+                </MudItem>
+            }
+
+            @if (ResultTypeValue == ResultType.LetterGrading || ResultTypeValue == ResultType.GoodExcellent)
+            {
+                <MudItem Class="row">
+                    @foreach (var option in model.ExamResultOptions)
+                    {
+                        <MudItem Class="col-md-6 col-sm-12 col-12" style="display: flex; align-items: center;">
+                            <MudNumericField Label="@option.OptionName" Variant="Variant.Text" Min="0.0" Max="100.0" @bind-Value="option.MinPercentage" />
+                            <div style="margin-left: 5px; font-size: 20px;">%</div>
+                        </MudItem>
+                    }
+                </MudItem>
+            }
+        </MudItem>
+
+    </MudCardContent>
+</MudForm>
+
+<InputFile id="formFile" OnChange="UploadImage" Accept=".png, .jpg" hidden />
+<div class="d-flex justify-content-end mt-4 p-3 mx-auto">
+    <MudButton OnClick="@Cancel" Class="text-capitalize me-1 fs-6" StartIcon="@Icons.Material.Filled.Cancel"
+               Size=Size.Medium Variant="Variant.Filled">Cancel</MudButton>
+
+    <MudButton OnClick="@(async () => await Submit())" Class="text-capitalize fs-6 ms-2" StartIcon="@Icons.Material.Filled.Save"
+               Size=Size.Medium Variant="Variant.Filled" Color="Color.Primary">@(!string.IsNullOrEmpty(ExamId) ? "Update" : "Save")</MudButton>
+</div>

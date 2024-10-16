@@ -1,0 +1,26 @@
+﻿<MudForm Model="@Question" @ref="@Form">
+
+    <MudItem Class="row">
+        <MudItem Class="col"><b>@Question.Name</b></MudItem>
+    </MudItem>
+
+    <MudItem Class="row my-4">
+        <MudItem Class="col-6">
+            <MudSelect Margin="Margin.Dense" T="int?" Label="Select Option" Value="@(SelectedOption)" ValueChanged="(x)=>OnOptionSelected(x)" Variant="Variant.Outlined" Clearable="true">
+                @foreach(var option in Options.KeyValues)
+                {
+                    <MudSelectItem T="int?" Value="@(option.Key)" Disabled=true>@option.Value</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+    </MudItem>
+
+    <MudItem Class="row">
+        <MudItem Class="col d-flex justify-content-end">
+            <MudItem Class="row">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" Disabled="true">Submit</MudButton>
+            </MudItem>
+        </MudItem>
+    </MudItem>
+
+</MudForm>

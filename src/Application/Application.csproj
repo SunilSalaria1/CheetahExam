@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>CheetahExam.Application</RootNamespace>
+    <AssemblyName>CheetahExam.Application</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="TodoItems\**" />
+    <Compile Remove="TodoLists\**" />
+    <EmbeddedResource Remove="TodoItems\**" />
+    <EmbeddedResource Remove="TodoLists\**" />
+    <None Remove="TodoItems\**" />
+    <None Remove="TodoLists\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Accounts\Commands\Create\CreateAccountCommand.cs" />
+    <Compile Remove="Common\Mappings\Accounts\RegisterMappingProfile.cs" />
+    <Compile Remove="Roles\Command\Create\CreateRoleCommand.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ardalis.GuardClauses" Version="4.0.1" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.4.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\WebUI\Shared\Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Accounts\Commands\Create\" />
+    <Folder Include="Common\Mappings\Accounts\" />
+    <Folder Include="Roles\Command\Create\" />
+  </ItemGroup>
+
+</Project>

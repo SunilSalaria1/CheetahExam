@@ -1,0 +1,98 @@
+﻿@page "/companies"
+@attribute [Authorize(Roles = Constant.UserRoles.Administrator)]
+
+@using CheetahExam.WebUI.Shared.Common.Models.Companies
+@using CheetahExam.WebUI.Shared.Constants
+@using Microsoft.AspNetCore.Authorization
+
+<div class="row">
+    <div class="col-sm-12">
+        <MudCard Elevation="0">
+            <MudItem Class="row">
+                <MudItem Class="col p-0">
+                    <MudText Typo="Typo.h5">Companies</MudText>
+                </MudItem>
+            </MudItem>
+            <MudItem Class="row mt-0 mb-3">
+                <MudItem Class="col p-0">
+                    <MudItem Class="row justify-content-lg-between gap-y-3">
+                        <MudItem Class="col-xl-5 col-md-4 p-0">
+                            <MudTextField @bind-Value="SearchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                        </MudItem>
+                        <MudItem Class="col-xl-5 col-md-8 d-sm-flex d-block justify-content-end align-items-center gap-3 p-0">
+                            <MudButton Href=@($"/companies/edit") Class="text-capitalize" StartIcon="@Icons.Material.Filled.AddCircle"
+                                       Size=Size.Medium Variant="Variant.Filled" Color="Color.Primary">Create</MudButton>
+                        </MudItem>
+                    </MudItem>
+                </MudItem>
+            </MudItem>
+            <MudItem Class="row pb-0">
+                <MudItem Class="col-12 col-md-8 p-1">
+                    <MudItem Class="row">
+                        <MudItem Class="col-12 col-md-2 p-1 d-flex align-items-center">
+                            Filters
+                        </MudItem>
+                        <MudItem Class="col-12 col-md-5 p-1 d-flex align-items-center">
+                            <MudSwitch Value="ISActive" ValueChanged="@((bool x) => HandleActiveToggle(x))" Color="Color.Primary" Label="Show Active Companies" />
+                        </MudItem>
+                    </MudItem>
+                </MudItem>
+            </MudItem>
+        </MudCard>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <MudDataGrid Class="p-2" Elevation="4" T="CompanyDto" Items="@Companies" SortMode="SortMode.Multiple" Dense=true
+                     Filterable="true" Bordered="true" Hideable="true" QuickFilter="@QuickFilter" Loading=@ISLoading>
+            <Columns>
+                <TemplateColumn Sortable="false" Filterable="false">
+                    <CellTemplate>
+                        <MudStack Row Class="d-flex justify-content-center">
+                             <MudAvatar onclick="@(() => PopupImage(context.Item.Media?.Url??"/images/course_image.jpg"))" Rounded=true>
+                                 <MudImage Src="@(context.Item.Media?.Url??"/images/course_image.jpg")" Width="50" Height="50" Alt="Company Image" Elevation="25" Class="rounded-lg" />
+                             </MudAvatar>
+                         </MudStack>
+                     </CellTemplate>
+                 </TemplateColumn>
+                 <PropertyColumn Property="x => x.Name" Title="Company Name" Sortable="true" Filterable="false" />
+                 <PropertyColumn Property="x => x.Address" Title="Street Address" Sortable="false" Filterable="false" />
+                 <PropertyColumn Property="x => x.City" Title="City" Sortable="true" Filterable="false" />
+                 <PropertyColumn Property="x => x.State" Title="State" Sortable="true" Filterable="false" />
+                 <PropertyColumn Property="x => x.PhoneNumber" Title="Contact Number" Sortable="false" Filterable="false" />
+                 <PropertyColumn Property="x => x.SupportContact" Title="Support Number" Sortable="false" Filterable="false" />
+                 <TemplateColumn Sortable="false" Filterable="false">
+                     <CellTemplate>
+                         <MudStack Row Spacing="2" Class="d-flex justify-content-center">
+                             <MudTooltip Text="View">
+                                 <MudIconButton Href=@($"/companies/{context.Item.UniqueId}") Icon="@Icons.Material.Filled.Info" Size="@Size.Small" Variant="@Variant.Filled" aria-label="edit" Color="@Color.Info" />
+                             </MudTooltip>
+                             <MudTooltip Text="Edit">
+                                 <MudIconButton Href=@($"/companies/{context.Item.UniqueId}/edit") Icon="@Icons.Material.Filled.Edit" Size="@Size.Small" Variant="@Variant.Filled" aria-label="edit" Color="@Color.Primary" />
+                             </MudTooltip>
+                             <MudTooltip Text="@(context.Item.ISActive?"Delete":"Retrieve")">
+                                 <MudIconButton OnClick="@(() => HandleCompanyDeleteAction(context.Item.UniqueId, context.Item.ISActive ? "Delete" : "Retrieve"))"
+                                                Icon="@(context.Item.ISActive ? (Icons.Material.Filled.Delete):  (Icons.Material.Filled.Undo))" Size="@Size.Small"
+                                                Variant="@Variant.Filled" aria-label="delete" Color="@(context.Item.ISActive ? Color.Error : Color.Warning)" />
+                             </MudTooltip>
+                         </MudStack>
+                     </CellTemplate>
+                 </TemplateColumn>
+             </Columns>
+             <PagerContent>
+                 <MudDataGridPager T="CompanyDto" />
+             </PagerContent>
+         </MudDataGrid>
+     </div>
+ </div>
+
+ @* Please use ImageDialog.razor instead of below code *@
+ <MudDialog ClassContent="p-0 d-flex justify-content-end" @bind-IsVisible="ISImageDialogVisible" Options="ImageDialogOptions">
+     <DialogContent>
+         <MudIconButton Class="position-absolute white-text" OnClick="ClosePopupImage" Icon="@Icons.Material.Filled.Close" Color="Color.Default" aria-label="delete"></MudIconButton>
+         <MudImage Src="@DialogImageURL" Width="400" Alt="Company Image" Elevation="25" />
+     </DialogContent>
+ </MudDialog>
+ @* <----------------/--------------------------> *@

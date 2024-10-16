@@ -1,0 +1,81 @@
+﻿@page "/generalLookups"
+@attribute [Authorize(Roles = Constant.UserRoles.Admin )]
+
+@using CheetahExam.WebUI.Shared.Common.Models
+@using System.Text.RegularExpressions
+@using CheetahExam.WebUI.Shared.Common.Models.GeneralLookUps
+@using CheetahExam.WebUI.Shared.Constants
+@using Microsoft.AspNetCore.Authorization
+
+<style type="text/css">
+    .custom-no-padding {
+        padding: 0px !important; /* Use !important if needed to override the default styling */
+    }
+</style>
+
+<div class="row">
+    <div class="col-12">
+        <MudTabs ActivePanelIndexChanged="OnPanelIndexChanged" Elevation="4" Rounded="true" Color="@Color.Transparent" PrevIcon="@Icons.Material.Filled.SkipPrevious" NextIcon="@Icons.Material.Filled.SkipNext">
+            @foreach (var type in GeneralLookUp_Types)
+            {
+                <MudTabPanel Text=@ExtractHeader(type) />
+            }
+        </MudTabs>
+    </div>
+</div>
+
+<div class="row py-4">
+    <div class="col-sm-12">
+        <MudCard Elevation="0">
+            <MudItem Class="row">
+                <MudItem Class="col p-0">
+                    <MudText Typo="Typo.h5">@ExtractHeader(@GeneralLookUp_Types[ActiveIndex])s</MudText>
+                    </MudItem>
+                </MudItem>
+                <MudItem Class="row pb-2">
+                    <MudItem Class="col p-0">
+                        <MudItem Class="row">
+                            <MudItem Class="col-12 col-md-6 d-flex justify-content-between">
+                                <MudSwitch Value="ISArchived" ValueChanged="@((bool x) => HandleArchivedToggle(x))" Class="d-flex justify-end" Color="Color.Primary" Label="Show Archived" />
+                            </MudItem>
+                            <MudItem Class="col-12 col-md-6 col d-flex align-items-end p-0">
+                                <MudTextField @bind-Value="SearchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                                <MudButton OnClick="@(() => CreateGeneralLookUp())" Class="ms-5 text-capitalize mud-button-40 fs-6" StartIcon="@Icons.Material.Filled.AddCircle" Size=Size.Medium Variant="Variant.Filled" Color="Color.Primary">Create</MudButton>
+                            </MudItem>
+                        </MudItem>
+                    </MudItem>
+                </MudItem>
+            </MudCard>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <MudDataGrid Class="p-2" Elevation="4" T="GeneralLookUpDto" Items="@GeneralLookUpForActiveIndex" SortMode="SortMode.Multiple"
+                         Hover="true" Dense="true" Filterable="true" Bordered="true" Hideable="true" QuickFilter="@QuickFilter" Loading=@ISLoading>
+                <Columns>
+                    <PropertyColumn Property="x => x.Value" Title="Name" Sortable="true" Filterable="false" />
+                    <PropertyColumn Property="x => x.ISActive" Title="IsActive" Sortable="true" Filterable="false" />
+                    <PropertyColumn Property="x => x.DisplayOrder" Title="Display Order" Sortable="true" Filterable="false" />
+                    <PropertyColumn Property="x => x.CreatedUtc" Title="Created Date" Sortable="false" Filterable="false" />
+                    <TemplateColumn Sortable="false" Filterable="false">
+                        <CellTemplate>
+                            <MudStack Row Spacing="2" Class="d-flex justify-content-center">
+                             <MudTooltip Text="Edit">
+                                 <MudIconButton OnClick="@(() => EditGeneralLookUp(context.Item))" Icon="@Icons.Material.Filled.Edit" Size="@Size.Small" Variant="@Variant.Filled" aria-label="edit" Color="@Color.Primary" />
+                             </MudTooltip>
+                             <MudTooltip Text="@(context.Item.ISArchive?"Retrieve":"Delete")">
+                                 <MudIconButton OnClick="@(context.Item.ISArchive ? (() => RetrieveGeneralLookUp(context.Item.UniqueId)) : (() => DeleteGeneralLookUp(context.Item.UniqueId)))"
+                                                Icon="@(context.Item.ISArchive ? (Icons.Material.Filled.Undo) : (Icons.Material.Filled.Delete))" Size="@Size.Small"
+                                                Variant="@Variant.Filled" aria-label="delete" Color="@(context.Item.ISArchive ? Color.Warning : Color.Error)" />
+                             </MudTooltip>
+                         </MudStack>
+                     </CellTemplate>
+                 </TemplateColumn>
+             </Columns>
+             <PagerContent>
+                 <MudDataGridPager T="GeneralLookUpDto" />
+             </PagerContent>
+         </MudDataGrid>
+     </div>
+ </div>

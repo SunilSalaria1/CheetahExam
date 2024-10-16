@@ -1,0 +1,24 @@
+﻿@using CheetahExam.WebUI.Shared.Common.Models.Exams
+
+
+<MudForm Model="@Question" @ref="@Form">
+
+    <MudItem Class="row">
+        <MudItem Class="col"><b>@Question.Name</b></MudItem>
+    </MudItem>
+
+    <MudItem Class="row my-4">
+        <MudItem Class="col-6">
+            <MudTextField @bind-Value="@Answer" Label="" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="true"></MudTextField>
+        </MudItem>
+    </MudItem>
+
+    <MudItem Class="row">
+        <MudItem Class="col d-flex justify-content-end">
+            <MudItem Class="row">
+                 <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" Disabled="true">Submit</MudButton>
+            </MudItem>
+        </MudItem>
+    </MudItem>
+
+</MudForm>

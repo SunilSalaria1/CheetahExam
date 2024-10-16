@@ -1,0 +1,21 @@
+﻿<MudForm Model="@Question" @ref="@Form">
+
+    <MudItem Class="row">
+        <MudItem Class="col"><b>@Question.Name</b></MudItem>
+    </MudItem>
+
+    <MudItem Class="row my-4">
+        <MudItem Class="col-12">
+            <MudTextField T="string" Label="" Variant="Variant.Outlined" Text="@Question.Options[0].Name" AutoGrow Lines="5"  HelperText="Type Your Answer Here" />
+        </MudItem>
+    </MudItem>
+
+    <MudItem Class="row">
+        <MudItem Class="col d-flex justify-content-end">
+            <MudItem Class="row">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" Disabled="true">Submit</MudButton>
+            </MudItem>
+        </MudItem>
+    </MudItem>
+
+</MudForm>

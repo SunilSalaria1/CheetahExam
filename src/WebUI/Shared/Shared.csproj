@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+      <RootNamespace>CheetahExam.WebUI.Shared</RootNamespace>
+      <AssemblyName>CheetahExam.WebUI.Shared</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Common\Models\Accounts\RegisterVm.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentValidation" Version="10.4.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="7.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="7.0.0" />
+    </ItemGroup>
+</Project>
